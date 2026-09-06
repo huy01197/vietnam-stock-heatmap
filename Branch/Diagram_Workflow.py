@@ -353,25 +353,17 @@ def generate_diagram(theme="neo-dark"):
     draw_arrow((73.0, 43.0), (73.5, 30.0), label="WebSocket /ws (Tick sống)", label_pos=0.5)
 
     # ─── 7. LƯU ẢNH RA FILE VỚI ĐỘ PHÂN GIẢI CAO 300 DPI ───
-    prefix = "market_heatmap_architecture" if theme == "neo-dark" else "market_heatmap_neo_light"
-    out_png = f"{prefix}.png"
-    out_jpg = f"{prefix}.jpg"
-    legacy_jpg = "Heatmap_Dark_A4.jpg" if theme == "neo-dark" else "Heatmap_Light_A4.jpg"
+    out_dir = Path(__file__).resolve().parent
+    out_png = out_dir / "market_heatmap_neo_light.png"
 
     plt.savefig(out_png, format='png', dpi=300, bbox_inches='tight', pad_inches=0.18, facecolor=c_canvas)
-    plt.savefig(out_jpg, format='jpg', dpi=300, bbox_inches='tight', pad_inches=0.18, facecolor=c_canvas)
-    plt.savefig(legacy_jpg, format='jpg', dpi=300, bbox_inches='tight', pad_inches=0.18, facecolor=c_canvas)
     plt.close()
 
-    print(f"🎉 [{theme.upper()}] Đã xuất file thành công:")
-    print(f"   - PNG (300 DPI): {Path(out_png).resolve()}")
-    print(f"   - JPG (300 DPI): {Path(out_jpg).resolve()}")
+    print(f"🎉 Đã xuất thành công duy nhất 1 file ảnh:")
+    print(f"   - PNG (300 DPI): {out_png.resolve()}")
 
 if __name__ == '__main__':
-    # Mặc định xuất phiên bản Neo-Dark:
-    generate_diagram(theme="neo-dark")
-    
-    # Đồng thời xuất thêm phiên bản Neo-Light:
+    # Chỉ tạo duy nhất 1 hình ảnh market_heatmap_neo_light.png
     generate_diagram(theme="neo-light")
 
 
