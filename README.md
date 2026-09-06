@@ -11,13 +11,12 @@
 
 ---
 
-## 📸 Giao Diện Trực Quan (Interface Preview)
+## 📸 Sơ Đồ Kiến Trúc Hệ Thống (System Architecture)
 
-| Chế độ Neo-Dark (Mặc định) | Sơ đồ Kiến trúc 5 Tầng (System Architecture) |
-| :---: | :---: |
-| ![Preview](Branch/Heatmap_Dark_1280x640_1.jpg) | [📂 Xem toàn bộ tài liệu & sơ đồ trong thư mục `Branch/`](Branch/) |
+![Vietnam Stock Heatmap Architecture](Branch/Heatmap_Dark_1280x640_1.jpg)
 
----
+> 📖 **Xem bài viết phân tích kiến trúc chi tiết:** 👉 [**SYSTEM_OVERVIEW.md**](Branch/SYSTEM_OVERVIEW.md)  
+> *(Bao gồm chi tiết 5 tầng công nghệ, cơ chế giải phóng socket 1-Click Restart, luồng SignalR SSI độ trễ < 16ms và ma trận điều phối tệp tin).*
 
 ## 🌟 Tính Năng Nổi Bật (Key Features)
 
@@ -123,14 +122,13 @@ Heatmap Stocks/
 │   └── custom_animation.js
 ├── cache/                      # Bộ nhớ đệm cục bộ (tự động tạo, lưu SSI Token)
 │
-└── Branch/                     # THƯ MỤC TÀI LIỆU KIẾN TRÚC & THIẾT KẾ ĐỒ HỌA
-    ├── SYSTEM_OVERVIEW.md      # Tài liệu tổng quan kiến trúc hệ thống
-    ├── SYSTEM_OVERVIEW.docx    # Tài liệu định dạng Word cho báo cáo
-    ├── DOCS.md                 # Hướng dẫn chi tiết mã nguồn
-    ├── DIAGRAM.md              # Sơ đồ luồng dữ liệu 5 Section
-    ├── diagram.mmd             # Mã nguồn sơ đồ Mermaid
-    ├── Diagram_Workflow.py     # Script Matplotlib xuất poster A4 (300 DPI)
-    └── clean_svg.py            # Tiện ích tối ưu hóa SVG cho Adobe Illustrator
+└── Branch/                     # THƯ MỤC TÀI LIỆU KIẾN TRÚC & SƠ ĐỒ HỆ THỐNG
+    ├── SYSTEM_OVERVIEW.md      # Bài viết phân tích kiến trúc toàn diện & chuyên sâu
+    ├── SYSTEM_OVERVIEW.docx    # Bản Word định dạng chuẩn cho báo cáo/in ấn
+    ├── SYSTEM_OVERVIEW_GoogleDocs.html # Bản HTML tương thích Google Docs
+    ├── Heatmap_Dark_1280x640_1.jpg     # Ảnh sơ đồ kiến trúc (chuẩn ngang 1280x640)
+    ├── Heatmap_Dark_3x4.jpg            # Ảnh sơ đồ kiến trúc (chuẩn dọc A4 300 DPI)
+    └── diagram.mmd             # Mã nguồn sơ đồ 5 Section Mermaid
 ```
 
 ---
