@@ -15,7 +15,7 @@
 
 | Chế độ Neo-Dark (Mặc định) | Sơ đồ Kiến trúc 5 Tầng (System Architecture) |
 | :---: | :---: |
-| ![Preview](Branch/Heatmap_Dark_1280x640_1.jpg) | Xem chi tiết trong thư mục `Branch/` |
+| ![Preview](Branch/Heatmap_Dark_1280x640_1.jpg) | [📂 Xem toàn bộ tài liệu & sơ đồ trong thư mục `Branch/`](Branch/) |
 
 ---
 
