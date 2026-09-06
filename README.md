@@ -1,4 +1,4 @@
-# 📈 Vietnam Stock Market Real-Time Heatmap
+# Vietnam Stock Market Real-Time Heatmap
 ### Bản Đồ Nhiệt Thị Trường Chứng Khoán Việt Nam Thời Gian Thực (< 16ms)
 
 [![Python Version](https://img.shields.io/badge/Python-3.10%2B-blue.svg?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
@@ -11,83 +11,85 @@
 
 ---
 
-## 📸 Sơ Đồ Kiến Trúc Hệ Thống (System Architecture)
+## Sơ Đồ Kiến Trúc Hệ Thống (System Architecture)
 
-![Vietnam Stock Heatmap Architecture](Branch/Heatmap_Dark_1280x640_1.jpg)
+![Vietnam Stock Heatmap Architecture](Branch/Heatmap_Dark_1280x640.jpg)
 
-> 📖 **Xem bài viết phân tích kiến trúc chi tiết:** 👉 [**SYSTEM_OVERVIEW.md**](Branch/SYSTEM_OVERVIEW.md)  
+> **Xem bài viết phân tích kiến trúc chi tiết:** [**SYSTEM_OVERVIEW.md**](Branch/SYSTEM_OVERVIEW.md)  
 > *(Bao gồm chi tiết 5 tầng công nghệ, cơ chế giải phóng socket 1-Click Restart, luồng SignalR SSI độ trễ < 16ms và ma trận điều phối tệp tin).*
 
-## 🌟 Tính Năng Nổi Bật (Key Features)
+---
 
-### 1. ⚡ Real-time Sub-16ms Streaming (SignalR + WebSocket)
+## Tính Năng Nổi Bật (Key Features)
+
+### 1. Real-time Sub-16ms Streaming (SignalR + WebSocket)
 - Bắt tay trực tiếp với máy chủ SSI DataHub (`fc-datahub.ssi.com.vn`).
 - Đăng ký song song 2 kênh dữ liệu:
   - `X:ALL`: Khớp lệnh từng lô cổ phiếu tức thời của toàn bộ sàn giao dịch.
   - `MI:ALL`: Chỉ số biến động thị trường (VN-Index, VN30, HNX-Index, UPCoM).
 - Máy chủ `aiohttp` phân phối luồng dữ liệu hai chiều qua kênh WebSocket `/ws` tới hàng loạt client đồng thời với độ trễ $< 16\text{ms}$ (chuẩn 60 FPS).
 
-### 2. 🗺️ ECharts Treemap Đột Phá (Hook ZRender Centroid)
+### 2. ECharts Treemap Đột Phá (Hook ZRender Centroid)
 - **100% Focused Viewport**: Bản đồ nhiệt Treemap chiếm trọn không gian chính, hiển thị trực quan tỷ trọng thanh khoản (GTGD) và sắc màu biến động giá.
 - **ZRender Centroid Hook**: Can thiệp trực tiếp vào tọa độ trọng tâm hình học của từng khối chữ nhật, căn giữa tiêu chuẩn và tự động ẩn nhãn ô nhỏ ($< 38\text{px}$) nhằm chống tràn chữ và vỡ khung hình.
 - **Bảng màu 5 cấp độ chuẩn Vietstock**:
-  - 🟣 **Tím**: Giá trần (Ceiling)
-  - 🟢 **Xanh lá**: Tăng giá (Advance)
-  - 🟡 **Vàng**: Tham chiếu / Đứng giá (Unchanged)
-  - 🔴 **Đỏ**: Giảm giá (Decline)
-  - 🔵 **Xanh lơ**: Giá sàn (Floor)
+  - **Tím**: Giá trần (Ceiling)
+  - **Xanh lá**: Tăng giá (Advance)
+  - **Vàng**: Tham chiếu / Đứng giá (Unchanged)
+  - **Đỏ**: Giảm giá (Decline)
+  - **Xanh lơ**: Giá sàn (Floor)
 
-### 3. 🏷️ Phân Loại 15 Nhóm Ngành Chuẩn VS-Sector
+### 3. Phân Loại 15 Nhóm Ngành Chuẩn VS-Sector
 - Chuẩn hóa hơn 700 mã cổ phiếu vào 15 nhóm ngành tài chính chính thống: *Ngân hàng, Bất động sản, Dịch vụ tài chính, Bán lẻ, Thực phẩm & Đồ uống, Tài nguyên cơ bản (Thép), Hóa chất, Dầu khí, Điện nước & Xăng dầu khí đốt, Hàng & Dịch vụ công nghiệp, Xây dựng & Vật liệu, Công nghệ thông tin, Du lịch & Giải trí, Y tế, Bảo hiểm*.
 - Tự động quét bổ sung từ API VNDirect finfo cho 3,000+ mã niêm yết mới.
 
-### 4. 📱 Responsive Drawer & Finviz Sidebar Toggle
+### 4. Responsive Drawer & Finviz Sidebar Toggle
 - **Desktop**: Cung cấp nút Toggle `[ ◀ Bảng chỉ số ]` / `[ 📊 Bảng chỉ số ]` cho phép thu gọn toàn bộ Sidebar về `0px`, mở rộng bản đồ ra $100\%$ không gian làm việc.
 - **Tablet / Mobile / Chia đôi màn hình**: Tự động chuyển đổi cột chỉ số thành ngăn kéo trượt (Off-canvas Drawer) mượt mà có backdrop mờ, tối ưu hóa thao tác chạm trên màn hình cảm ứng.
 
-### 5. 🛡️ Cơ Chế Chuyển Tuyến Kép (Dual Connection Resiliency)
-- 🟢 **FASTCONNECT LIVE**: Trạng thái WebSocket kết nối thông suốt, máy chủ chủ động bắn (push) từng tick giá sống ngay khi sàn khớp lệnh.
-- 🟡 **POLLING LIVE (Phao cứu sinh Failover)**: Khi mạng nội bộ hoặc socket gặp sự cố, giao diện tự động chuyển sang chế độ Polling REST API mỗi 2.5s để biểu đồ không bao giờ bị dừng lại, đồng thời thử kết nối lại WebSocket ngầm.
+### 5. Cơ Chế Chuyển Tuyến Kép (Dual Connection Resiliency)
+- **FASTCONNECT LIVE**: Trạng thái WebSocket kết nối thông suốt, máy chủ chủ động bắn (push) từng tick giá sống ngay khi sàn khớp lệnh.
+- **POLLING LIVE (Phao cứu sinh Failover)**: Khi mạng nội bộ hoặc socket gặp sự cố, giao diện tự động chuyển sang chế độ Polling REST API mỗi 2.5s để biểu đồ không bao giờ bị dừng lại, đồng thời thử kết nối lại WebSocket ngầm.
 
-### 6. 🚀 0ms Cold-Start & 1-Click Play Restart
+### 6. 0ms Cold-Start & 1-Click Play Restart
 - **0ms Cold-Start**: Người dùng truy cập trang web là có dữ liệu ngay lập tức từ bộ nhớ RAM `MarketStateStore` mà không cần đợi bắt tay socket.
 - **1-Click Play Restart**: Khi nhấn nút Run/Play trong IDE, `app.py` tự động quét cổng `8050`, đóng các tiến trình cũ đang chiếm giữ để tái khởi động tức thì mà không gặp lỗi `Address already in use`.
 - **Thoát Terminal tức thời**: Đăng ký `SIGINT` (Ctrl+C) can thiệp tầng OS nhả terminal trong 0.05s.
 
 ---
 
-## 🏛️ Kiến Trúc Hệ Thống (Architecture Flow)
+## Kiến Trúc Hệ Thống (Architecture Flow)
 
 ```mermaid
 flowchart TD
     subgraph S1 ["1. NGUỒN CẤP DỮ LIỆU GỐC & XÁC THỰC"]
-        A1["🔑 config.json (RSA Key & API Secret)"]
-        A2["🌐 SSI FastConnect REST API"]
-        A3["⚡ SSI DataHub SignalR (X:ALL, MI:ALL)"]
-        A4["📊 External / VNDirect Finfo (15 Ngành)"]
+        A1["config.json (RSA Key & API Secret)"]
+        A2["SSI FastConnect REST API"]
+        A3["SSI DataHub SignalR (X:ALL, MI:ALL)"]
+        A4["External / VNDirect Finfo (15 Ngành)"]
     end
 
     subgraph S2 ["2. DỊCH VỤ DỮ LIỆU & BẢO MẬT (market_service.py)"]
-        B1["🛡️ FastConnect Vault (Quản lý Token Cache)"]
-        B2["🏷️ Dynamic Sector Processor (15 Nhóm Ngành)"]
-        B3["📥 Snapshot & Fallback Fetcher (Lùi ngày nghỉ lễ)"]
+        B1["FastConnect Vault (Quản lý Token Cache)"]
+        B2["Dynamic Sector Processor (15 Nhóm Ngành)"]
+        B3["Snapshot & Fallback Fetcher (Lùi ngày nghỉ lễ)"]
     end
 
     subgraph S3 ["3. STREAMING & IN-MEMORY RAM STORE (stream_hub.py)"]
-        C1["📡 SignalR Connector Client"]
-        C2["💾 IN-MEMORY RAM STORE (700+ Stocks, Thread-Safe)"]
-        C3["📢 WebSocket Broadcaster Hub"]
+        C1["SignalR Connector Client"]
+        C2["IN-MEMORY RAM STORE (700+ Stocks, Thread-Safe)"]
+        C3["WebSocket Broadcaster Hub"]
     end
 
     subgraph S4 ["4. TẦNG MÁY CHỦ WEB (app.py :8050)"]
-        D1["🌐 HTTP REST APIs (/api/heatmap, /api/indices)"]
-        D2["🔌 WebSocket Route (/ws)"]
-        D3["🔄 Auto-Restart & Port Cleaner"]
+        D1["HTTP REST APIs (/api/heatmap, /api/indices)"]
+        D2["Route /ws (Two-Way WebSocket)"]
+        D3["Auto-Restart & Port Cleaner"]
     end
 
     subgraph S5 ["5. GIAO DIỆN CLIENT SPA (bauhaus-ui.html)"]
-        E1["🗺️ MAIN CANVAS: ECharts Treemap 100%"]
-        E2["📋 Responsive Drawer (3 Chỉ số sàn & Top dòng tiền)"]
+        E1["MAIN CANVAS: ECharts Treemap 100%"]
+        E2["Responsive Drawer (3 Chỉ số sàn & Top dòng tiền)"]
     end
 
     A1 & A2 --> B1 & B3
@@ -104,7 +106,7 @@ flowchart TD
 
 ---
 
-## 📂 Cấu Trúc Mã Nguồn (Project Structure)
+## Cấu Trúc Mã Nguồn (Project Structure)
 
 ```
 Heatmap Stocks/
@@ -126,14 +128,14 @@ Heatmap Stocks/
     ├── SYSTEM_OVERVIEW.md      # Bài viết phân tích kiến trúc toàn diện & chuyên sâu
     ├── SYSTEM_OVERVIEW.docx    # Bản Word định dạng chuẩn cho báo cáo/in ấn
     ├── SYSTEM_OVERVIEW_GoogleDocs.html # Bản HTML tương thích Google Docs
-    ├── Heatmap_Dark_1280x640_1.jpg     # Ảnh sơ đồ kiến trúc (chuẩn ngang 1280x640)
+    ├── Heatmap_Dark_1280x640.jpg       # Ảnh sơ đồ kiến trúc (chuẩn ngang 1280x640)
     ├── Heatmap_Dark_3x4.jpg            # Ảnh sơ đồ kiến trúc (chuẩn dọc A4 300 DPI)
     └── diagram.mmd             # Mã nguồn sơ đồ 5 Section Mermaid
 ```
 
 ---
 
-## 🚀 Hướng Dẫn Cài Đặt & Khởi Chạy (Quick Start)
+## Hướng Dẫn Cài Đặt & Khởi Chạy (Quick Start)
 
 ### 1. Yêu cầu hệ thống (Prerequisites)
 - **Python**: Phiên bản `>= 3.10`
@@ -141,8 +143,8 @@ Heatmap Stocks/
 
 ### 2. Tải mã nguồn về máy (Clone Repository)
 ```bash
-git clone https://github.com/<your-username>/Vietnamese-Stock-Analysis.git
-cd "Heatmap Stocks"
+git clone https://github.com/huy01197/vietnam-stock-heatmap.git
+cd "vietnam-stock-heatmap"
 ```
 
 ### 3. Tạo môi trường ảo & Cài đặt thư viện
@@ -189,7 +191,7 @@ python3 app.py
 
 ---
 
-## 🔌 Đặc Tả Giao Tiếp REST & WebSocket (API Reference)
+## Đặc Tả Giao Tiếp REST & WebSocket (API Reference)
 
 | Phương thức | Đường dẫn (Endpoint) | Mô tả phản hồi |
 | :---: | :--- | :--- |
@@ -202,7 +204,7 @@ python3 app.py
 
 ---
 
-## 🛠️ Công Nghệ Sử Dụng (Tech Stack)
+## Công Nghệ Sử Dụng (Tech Stack)
 
 - **Backend & Network**: Python 3.10+, `aiohttp`, `asyncio`, `urllib3`, `requests`.
 - **Data Engineering**: `pandas`, SSI FastConnect SDK (`ssi-fc-data`).
@@ -212,8 +214,7 @@ python3 app.py
 
 ---
 
-## 📄 Bản Quyền & Miễn Trừ Trách Nhiệm (License & Disclaimer)
+## Bản Quyền & Miễn Trừ Trách Nhiệm (License & Disclaimer)
 
 - **Bản quyền**: Phát hành theo giấy phép [MIT License](LICENSE).
 - **Miễn trừ trách nhiệm**: Dự án được xây dựng phục vụ mục đích nghiên cứu, học tập kỹ thuật lập trình tài chính và trực quan hóa dữ liệu. Người dùng tự chịu trách nhiệm về các quyết định đầu tư dựa trên dữ liệu hiển thị.
-
