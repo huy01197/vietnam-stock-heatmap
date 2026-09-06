@@ -1,0 +1,14 @@
+/* Tối ưu hiệu ứng chớp sáng nền (Flash) */
+@keyframes flash-glow {
+    0% { filter: brightness(2) contrast(1.5); }
+    100% { filter: brightness(1) contrast(1); }
+}
+
+.flash-active {
+    animation: flash-glow 0.3s ease-out !important;
+}
+
+/* Đảm bảo Plotly DOM cho phép thay đổi fill mượt mà */
+.treemaplayer path.surface {
+    transition: fill 0.3s ease-in-out;
+}

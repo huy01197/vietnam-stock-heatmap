@@ -1,0 +1,11 @@
+{
+  "client_id": "YOUR_CLIENT_ID",
+  "api_key": "YOUR_SSI_CONSUMER_ID",
+  "api_secret": "YOUR_SSI_CONSUMER_SECRET",
+  "private_key": "-----BEGIN RSA PRIVATE KEY-----\nYOUR_RSA_PRIVATE_KEY_HERE\n-----END RSA PRIVATE KEY-----",
+  "equity_account": "YOUR_EQUITY_ACCOUNT",
+  "derivative_account": "YOUR_DERIVATIVE_ACCOUNT",
+  "otp": "YOUR_OTP",
+  "log_level": "INFO"
+}
+

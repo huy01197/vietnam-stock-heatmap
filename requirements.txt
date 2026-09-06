@@ -1,0 +1,14 @@
+# Core Web & Async Server
+aiohttp>=3.9.0
+
+# Data Processing & Networking
+pandas>=2.0.0
+requests>=2.31.0
+urllib3>=2.0.0
+
+# SSI FastConnect SDK (Official Vietnam Stock Exchange Client)
+ssi-fc-data>=2.0.0
+
+# Diagram & Visualization Tools (Branch/ scripts)
+matplotlib>=3.8.0
+

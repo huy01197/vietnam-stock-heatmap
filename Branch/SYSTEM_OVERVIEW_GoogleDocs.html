@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Tài Liệu Vận Hành Hệ Thống Heatmap Stocks</title>
+  
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      font-size: 15px;
+      line-height: 1.6;
+      color: #1e293b;
+      background-color: #ffffff;
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 40px 24px;
+    }
+    .gdoc-banner {
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      border-radius: 8px;
+      padding: 16px 20px;
+      margin-bottom: 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .gdoc-banner-title {
+      font-weight: 700;
+      color: #1e40af;
+      font-size: 15px;
+    }
+    .gdoc-banner-desc {
+      font-size: 13px;
+      color: #3b82f6;
+      margin-top: 2px;
+    }
+    .copy-btn {
+      background: #2563eb;
+      color: #ffffff;
+      border: none;
+      padding: 8px 18px;
+      font-size: 14px;
+      font-weight: 600;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .copy-btn:hover {
+      background: #1d4ed8;
+    }
+    h1 {
+      color: #0f172a;
+      font-size: 26px;
+      border-bottom: 2px solid #e2e8f0;
+      padding-bottom: 12px;
+      margin-top: 30px;
+    }
+    h2 {
+      color: #1e293b;
+      font-size: 20px;
+      border-bottom: 1px solid #cbd5e1;
+      padding-bottom: 8px;
+      margin-top: 32px;
+    }
+    h3 {
+      color: #334155;
+      font-size: 17px;
+      margin-top: 24px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+      font-size: 14px;
+    }
+    th, td {
+      border: 1px solid #cbd5e1;
+      padding: 10px 14px;
+      text-align: left;
+    }
+    th {
+      background-color: #0f172a;
+      color: #ffffff;
+      font-weight: 600;
+    }
+    tr:nth-child(even) td {
+      background-color: #f8fafc;
+    }
+    pre {
+      background-color: #0f172a;
+      color: #f8fafc;
+      padding: 16px;
+      border-radius: 6px;
+      overflow-x: auto;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+    code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      background-color: #f1f5f9;
+      color: #0f172a;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 13px;
+    }
+    pre code {
+      background: transparent;
+      color: inherit;
+      padding: 0;
+    }
+    ul, ol {
+      padding-left: 24px;
+      margin: 12px 0;
+    }
+    li {
+      margin-bottom: 6px;
+    }
+  </style>
+  <script>
+    function copyForGoogleDocs() {
+      const content = document.getElementById('content-area');
+      const range = document.createRange();
+      range.selectNode(content);
+      window.getSelection().removeAllRanges();
+      window.getSelection().addRange(range);
+      document.execCommand('copy');
+      window.getSelection().removeAllRanges();
+      
+      const btn = document.getElementById('copy-btn');
+      const oldText = btn.innerText;
+      btn.innerText = '✅ Đã sao chép! Hãy dán vào Google Docs';
+      btn.style.background = '#10b981';
+      setTimeout(() => {
+        btn.innerText = oldText;
+        btn.style.background = '#2563eb';
+      }, 3000);
+    }
+  </script>
+
+</head>
+<body>
+
+  <div class="gdoc-banner">
+    <div>
+      <div class="gdoc-banner-title">📄 Tài Liệu Đã Được Định Dạng Sẵn Sàng Cho Google Docs</div>
+      <div class="gdoc-banner-desc">Bấm nút bên cạnh, sau đó mở Google Docs (docs.new) và nhấn <b>Cmd + V</b> (Paste).</div>
+    </div>
+    <button id="copy-btn" class="copy-btn" onclick="copyForGoogleDocs()">📋 Sao Chép Cho Google Docs</button>
+  </div>
+  <div id="content-area">
+
+
+<header id="title-block-header">
+<h1 class="title">Tài Liệu Vận Hành Hệ Thống Heatmap Stocks</h1>
+</header>
+<h1 id="tài-liệu-vận-hành-hệ-thống-đặc-tả-mã-nguồn-system-overview">TÀI
+LIỆU VẬN HÀNH HỆ THỐNG &amp; ĐẶC TẢ MÃ NGUỒN (SYSTEM OVERVIEW)</h1>
+<p><em>(Vietnamese Stock Realtime Heatmap Architecture • Core Python
+Engine &amp; ECharts Client)</em></p>
+<hr />
+<h2
+id="phần-1-tổng-quan-vận-hành-dự-án-system-lifecycle-data-pipeline">PHẦN
+1: TỔNG QUAN VẬN HÀNH DỰ ÁN (SYSTEM LIFECYCLE &amp; DATA PIPELINE)</h2>
+<p>Hệ thống <strong>Heatmap Stocks</strong> là một ứng dụng toàn trình
+(Full-stack) vận hành theo mô hình: <strong>100% Lõi xử lý &amp; Máy chủ
+viết bằng Python</strong> kết hợp với <strong>Tầng trình chiếu đồ họa
+bằng HTML5/ECharts Canvas</strong> trên trình duyệt.</p>
+<pre><code>┌────────────────────────────────────────────────────────────────────────────────────────┐
+│                               QUY TRÌNH VẬN HÀNH HỆ THỐNG                              │
+└────────────────────────────────────────────────────────────────────────────────────────┘
+
+  [Sở GDCK HOSE/HNX]
+          │
+          ▼
+  [SSI FastConnect &amp; DataHub]  ── (SignalR: X:ALL, MI:ALL)
+          │
+          ▼
+  ┌─────────────────────────────────────────────────────────────┐
+  │ TẦNG DỮ LIỆU &amp; BẢO MẬT (market_service.py)                  │
+  │ • Ký số RSA, cấp phát &amp; gia hạn Token tự động               │
+  │ • Phân loại 15 nhóm ngành chuẩn VS-Sector                   │
+  │ • Quét lùi 10 ngày khi thị trường nghỉ lễ                   │
+  │ • VNDirect finfo fallback cho chỉ số thị trường             │
+  └──────────────────────────────┬──────────────────────────────┘
+                                 │
+                                 ▼ (Đổ Snapshot khởi tạo)
+  ┌─────────────────────────────────────────────────────────────┐
+  │ TẦNG STREAMING &amp; BỘ NHỚ RAM (stream_hub.py)                 │
+  │ • Lớp MarketStateStore: Lưu trữ RAM 700+ mã cổ phiếu        │
+  │ • Tính toán độ rộng thị trường (Trần/Tăng/TC/Giảm/Sàn)      │
+  │ • Khóa an toàn đa luồng (Thread-Safe Mutex Lock)            │
+  │ • SignalR Stream Worker: Nhận tick giá sống liên tục        │
+  └──────────────────────────────┬──────────────────────────────┘
+                                 │
+                                 ▼ (Phát sóng thời gian thực)
+  ┌─────────────────────────────────────────────────────────────┐
+  │ TẦNG MÁY CHỦ WEB &amp; WEBSOCKET HUB (app.py :8050)             │
+  │ • Máy chủ web bất đồng bộ aiohttp (Asynchronous)            │
+  │ • 1-Click Play Restart: Tự giải phóng cổng 8050             │
+  │ • Thoát Ctrl+C tức thời (SIGINT 0.05s)                      │
+  │ • REST Endpoints: /api/heatmap, /api/indices, /api/summary  │
+  │ • WebSocket Hub: Route /ws phát sóng hai chiều              │
+  │ • Tự động kích hoạt trình duyệt khi khởi động               │
+  └──────────────────────────────┬──────────────────────────────┘
+                                 │
+                                 ▼ (WebSocket Tick Stream &lt; 16ms)
+  ┌─────────────────────────────────────────────────────────────┐
+  │ GIAO DIỆN CLIENT TRÌNH DUYỆT (bauhaus-ui.html)              │
+  │ • Main Canvas: ECharts Treemap chiếm 100% trọng tâm         │
+  │ • Hook ZRender Centroid: Căn giữa nhãn chữ và chống tràn    │
+  │ • Cột phụ / Drawer: 3 chỉ số, thanh độ rộng, top dòng tiền  │
+  │ • Tự co dãn theo thiết bị (Desktop, Nửa màn hình, Mobile)   │
+  │ • Hai chế độ: FASTCONNECT LIVE và POLLING LIVE (Fallback)   │
+  └─────────────────────────────────────────────────────────────┘</code></pre>
+<h3 id="trình-tự-khởi-động-hệ-thống-bootstrapping-sequence">1. Trình tự
+khởi động hệ thống (Bootstrapping Sequence)</h3>
+<p>Khi bạn chạy lệnh <code>python3 app.py</code> (hoặc bấm nút Play
+trong VS Code): 1. <strong>Kiểm tra và Giải phóng Cổng
+(<code>kill_existing_instance</code>)</strong>: Quét cổng
+<code>8050</code>, nếu có tiến trình cũ đang chiếm giữ thì tự động đóng
+ngay lập tức và đợi <span
+class="math inline">0.6<em>e</em><em>x</em><em>t</em><em>s</em></span>
+để giải phóng socket hoàn toàn. 2. <strong>Đăng ký Tín hiệu Thoát Tức
+Thời (<code>fast_exit_signal_handler</code>)</strong>: Đăng ký sự kiện
+<code>SIGINT</code> (Ctrl+C) và <code>SIGTERM</code> để gọi
+<code>os._exit(0)</code> tức thời, tránh hiện tượng socket ngầm làm treo
+terminal. 3. <strong>Khởi tạo Máy chủ Web
+(<code>app.py</code>)</strong>: <code>aiohttp.web.Application</code>
+được tạo lập, thiết lập các middleware bảo mật CORS headers. 4.
+<strong>Khởi chạy Vòng đời Ứng dụng (<code>on_startup</code>)</strong>:
+- Nạp cấu hình khóa xác thực <code>config.json</code> thông qua
+<code>market_service.py</code> (<code>load_ssi_config()</code>). - Gọi <code>market_service.py</code> để quét
+dữ liệu phiên gần nhất, phân loại ngành cho hơn 700 mã và nạp vào bộ nhớ
+RAM <code>MarketStateStore</code>. - Kích hoạt luồng chạy ngầm
+(Background Worker Thread) của <code>StreamHub</code> để mở kết nối
+SignalR WebSocket tới máy chủ SSI DataHub
+(<code>fc-datahub.ssi.com.vn</code>). 5. <strong>Mở cổng dịch vụ &amp;
+Phục vụ Client</strong>: - Máy chủ lắng nghe tại cổng
+<code>http://127.0.0.1:8050</code>. - Module <code>webbrowser</code> tự
+động mở trình duyệt web mặc định của hệ điều hành.</p>
+<h3 id="luồng-dữ-liệu-thời-gian-thực-real-time-streaming-pipeline">2.
+Luồng dữ liệu thời gian thực (Real-time Streaming Pipeline)</h3>
+<ul>
+<li><strong>Khi sàn có lệnh khớp mới</strong>: Sàn SSI bắn gói tin
+<code>X</code> (khớp lệnh cổ phiếu) hoặc <code>MI</code> (chỉ số sàn)
+qua kênh SignalR.</li>
+<li><strong>Tại <code>stream_hub.py</code></strong>: Parser giải mã gói
+tin thô, tính toán lại % biến động theo giá tham chiếu, ghi đè vào RAM
+Store trong thời gian microsecond (<span
+class="math inline"><em>O</em>(1)</span>).</li>
+<li><strong>Phát sóng tức thì</strong>:
+<code>stream_hub.broadcast_tick()</code> đẩy gói tin JSON qua kênh
+WebSocket <code>/ws</code> tới tất cả các trình duyệt đang kết nối.</li>
+<li><strong>Tại <code>bauhaus-ui.html</code></strong>: Trình duyệt nhận
+gói tin, cập nhật trực tiếp vào node ECharts tương ứng và kích hoạt hiệu
+ứng chớp màu (<code>.flash-update</code>) với độ trễ dưới <span
+class="math inline">16<em>e</em><em>x</em><em>t</em><em>m</em><em>s</em></span>
+(chuẩn 60 FPS).</li>
+</ul>
+<h3 id="cơ-chế-khởi-tạo-nhanh-0ms-0ms-cold-start-rendering">3. Cơ chế
+Khởi tạo Nhanh 0ms (0ms Cold-Start Rendering)</h3>
+<ul>
+<li>Ngay khi người dùng mở trang web hoặc bấm F5: Kịch bản JavaScript
+gửi đồng thời 2 yêu cầu REST <code>GET /api/heatmap</code> và
+<code>GET /api/indices</code>.</li>
+<li><code>app.py</code> đọc trực tiếp từ bộ nhớ RAM
+<code>MarketStateStore</code> và trả về gói dữ liệu toàn thị trường chỉ
+trong <span
+class="math inline">0<em>e</em><em>x</em><em>t</em><em>m</em><em>s</em></span>
+mà không cần chờ đợi luồng stream, giúp giao diện bản đồ nhiệt xuất hiện
+tức thì không có màn hình chờ.</li>
+</ul>
+<h3
+id="cơ-chế-chuyển-đổi-đường-truyền-fastconnect-live-vs-polling-live">4.
+Cơ chế Chuyển Đổi Đường Truyền (FASTCONNECT LIVE vs POLLING LIVE)</h3>
+<p>Trên thanh Header của giao diện web luôn có đèn tín hiệu thông minh
+phản ánh trạng thái mạng: - <strong>🟢 FASTCONNECT LIVE (Chế độ chính
+thức)</strong>: Kết nối WebSocket hai chiều đang mở thông suốt. Máy chủ
+chủ động “bắn” (push) từng tick giá sống ngay khi khớp lệnh với độ trễ
+<span
+class="math inline"> &lt; 16<em>e</em><em>x</em><em>t</em><em>m</em><em>s</em></span>.
+- <strong>🟡 POLLING LIVE (Chế độ phao cứu sinh / Failover)</strong>:
+Khi WebSocket bị ngắt kết nối (do mạng chập chờn hoặc máy chủ restart),
+giao diện lập tức chuyển sang chế độ này. Cứ mỗi <span
+class="math inline">2.5<em>e</em><em>x</em><em>t</em><em>s</em></span>,
+trình duyệt tự động gọi REST API nạp lại bảng giá để bản đồ nhiệt vẫn
+tiếp tục nhảy số bình thường, đồng thời chạy ngầm thử kết nối lại
+WebSocket.</p>
+<h3 id="cơ-chế-quản-lý-server-socket-hiện-đại">5. Cơ chế Quản lý Server
+&amp; Socket Hiện Đại</h3>
+<ul>
+<li><strong>1-Click Play Restart</strong>: Khi người dùng nhấn nút
+“Play” (Run Python File) trong VS Code, <code>app.py</code> tự động quét
+cổng 8050, đóng tiến trình cũ và chạy tiến trình mới ngay lập tức mà
+không bao giờ gặp lỗi
+<code>[Errno 48] address already in use</code>.</li>
+<li><strong>Thoát Ctrl+C tức thời (0.05s)</strong>: Nhờ có
+<code>fast_exit_signal_handler</code> trực tiếp can thiệp vào tầng hệ
+điều hành, khi bạn nhấn <code>Ctrl + C</code>, tiến trình sẽ đóng sạch
+các socket ngầm và nhả lại dòng lệnh Terminal ngay lập tức.</li>
+</ul>
+<hr />
+<h2 id="phần-2-ma-trận-phối-hợp-giữa-các-file-file-orchestration">PHẦN
+2: MA TRẬN PHỐI HỢP GIỮA CÁC FILE (FILE ORCHESTRATION)</h2>
+<table>
+<colgroup>
+<col style="width: 23%" />
+<col style="width: 29%" />
+<col style="width: 23%" />
+<col style="width: 23%" />
+</colgroup>
+<thead>
+<tr>
+<th style="text-align: left;">Tên File</th>
+<th style="text-align: center;">Ngôn ngữ</th>
+<th style="text-align: left;">Vai trò cốt lõi</th>
+<th style="text-align: left;">Phối hợp với các file khác</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><a
+href="file:///Users/huydang/Machine%20Learning/Heatmap%20Stocks/config.json"><code>config.json</code></a></td>
+<td style="text-align: center;">JSON</td>
+<td style="text-align: left;">Chứa khóa định danh ConsumerID,
+ConsumerSecret và PrivateKey RSA.</td>
+<td style="text-align: left;">Được nạp trực tiếp bởi <code>market_service.py</code> và <code>stream_hub.py</code>.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a
+href="file:///Users/huydang/Machine%20Learning/Heatmap%20Stocks/market_service.py"><code>market_service.py</code></a></td>
+<td style="text-align: center;">Python</td>
+<td style="text-align: left;">Tầng dịch vụ dữ liệu &amp; Bảo mật: Tự động lấy và duy trì AccessToken SSI, nạp 15 nhóm ngành
+chuẩn VS-Sector, lùi ngày nghỉ lễ, lấy snapshot giá và chỉ số từ
+SSI/VNDirect.</td>
+<td style="text-align: left;">Cung cấp dữ liệu nền tảng cho
+<code>stream_hub.py</code> và danh mục ngành cho
+<code>app.py</code>.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a
+href="file:///Users/huydang/Machine%20Learning/Heatmap%20Stocks/stream_hub.py"><code>stream_hub.py</code></a></td>
+<td style="text-align: center;">Python</td>
+<td style="text-align: left;">Bộ não điều phối thời gian thực: Quản lý
+In-Memory RAM Store, kết nối SignalR SSI và phát sóng WebSocket tới
+clients.</td>
+<td style="text-align: left;">Nhận dữ liệu nền từ
+<code>market_service.py</code>, được kích hoạt và điều phối bởi
+<code>app.py</code>.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a
+href="file:///Users/huydang/Machine%20Learning/Heatmap%20Stocks/app.py"><code>app.py</code></a></td>
+<td style="text-align: center;">Python</td>
+<td style="text-align: left;"><strong>Tập tin khởi chạy chính (Entry
+Point)</strong>: Máy chủ web <code>aiohttp</code>, 1-Click Play Restart,
+thoát Ctrl+C tức thời, định tuyến REST APIs, WebSocket
+<code>/ws</code>.</td>
+<td style="text-align: left;">Nhúng và phục vụ
+<code>bauhaus-ui.html</code>, kết nối với <code>stream_hub.py</code> và
+<code>market_service.py</code>.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a
+href="file:///Users/huydang/Machine%20Learning/Heatmap%20Stocks/bauhaus-ui.html"><code>bauhaus-ui.html</code></a></td>
+<td style="text-align: center;">HTML/CSS/JS</td>
+<td style="text-align: left;">Giao diện người dùng SPA: Bản đồ Treemap
+ECharts 100% trọng tâm, ngăn kéo Drawer responsive, font Be Vietnam Pro,
+2 chế độ Live.</td>
+<td style="text-align: left;">Nhận dữ liệu khởi tạo qua REST API và nhận
+tick giá trực tiếp từ WebSocket của <code>app.py</code>.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a
+href="file:///Users/huydang/Machine%20Learning/Heatmap%20Stocks/diagram.mmd"><code>diagram.mmd</code></a></td>
+<td style="text-align: center;">Mermaid</td>
+<td style="text-align: left;">Mã nguồn sơ đồ kiến trúc 5 Section chuẩn
+Mermaid mới nhất.</td>
+<td style="text-align: left;">Được sử dụng để xuất ảnh vector hoặc xem
+trực tiếp trên Mermaid Live / IDE.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a
+href="file:///Users/huydang/Machine%20Learning/Heatmap%20Stocks/DIAGRAM.md"><code>DIAGRAM.md</code></a></td>
+<td style="text-align: center;">Markdown</td>
+<td style="text-align: left;">Tài liệu trực quan hóa sơ đồ kiến trúc
+Mermaid kèm bảng đối soát.</td>
+<td style="text-align: left;">Tài liệu tham khảo kiến trúc chính thức
+của dự án.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a
+href="file:///Users/huydang/Machine%20Learning/Heatmap%20Stocks/clean_svg.py"><code>clean_svg.py</code></a></td>
+<td style="text-align: center;">Python</td>
+<td style="text-align: left;">Tiện ích chuyển đổi thẻ
+<code>&lt;foreignObject&gt;</code> sang
+<code>&lt;text&gt;</code>/<code>&lt;tspan&gt;</code> chuẩn để mở trên
+Adobe Illustrator không bị văng.</td>
+<td style="text-align: left;">Xử lý các file SVG xuất từ
+<code>mmdc</code>.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><a
+href="file:///Users/huydang/Machine%20Learning/Heatmap%20Stocks/Diagram_Workflow.py"><code>Diagram_Workflow.py</code></a></td>
+<td style="text-align: center;">Python</td>
+<td style="text-align: left;">Script độc lập dùng Matplotlib xuất poster
+kiến trúc chuẩn in ấn A4 (300 DPI) cả 2 chủ đề Dark &amp; Light.</td>
+<td style="text-align: left;">Xuất ra các file ảnh chất lượng cao
+<code>market_heatmap_architecture.png/jpg</code>.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="phần-3-bảng-tra-cứu-chi-tiết-từng-code-region-ở-các-file">PHẦN
+3: BẢNG TRA CỨU CHI TIẾT TỪNG CODE REGION Ở CÁC FILE</h2>
+<p>Mỗi file mã nguồn trong dự án được tổ chức nghiêm ngặt theo các
+<strong>Code Region</strong> có đánh số và tên gọi rõ ràng, giúp việc
+bảo trì, tra cứu và mở rộng cực kỳ thuận tiện:</p>
+<hr />
+<h3 id="file-1-app.py-tầng-máy-chủ-web-điều-phối">📂 File 1: <a
+href="file:///Users/huydang/Machine%20Learning/Heatmap%20Stocks/app.py"><code>app.py</code></a>
+(Tầng Máy Chủ Web &amp; Điều Phối)</h3>
+<table>
+<colgroup>
+<col style="width: 27%" />
+<col style="width: 27%" />
+<col style="width: 22%" />
+<col style="width: 22%" />
+</colgroup>
+<thead>
+<tr>
+<th style="text-align: center;">Region</th>
+<th style="text-align: center;">Phạm vi dòng</th>
+<th style="text-align: left;">Tên Region</th>
+<th style="text-align: left;">Chức năng kỹ thuật chi tiết</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td
+style="text-align: center;"><strong><code># region 1</code></strong></td>
+<td style="text-align: center;">L1 – L27</td>
+<td style="text-align: left;"><strong>Imports &amp;
+Initialization</strong></td>
+<td style="text-align: left;">Nạp framework <code>aiohttp.web</code>,
+thư viện <code>sys</code>, <code>time</code>, <code>signal</code>,
+<code>subprocess</code>, <code>asyncio</code>, JSON, trình duyệt
+<code>webbrowser</code>, import các hàm điều phối từ
+<code>stream_hub.py</code> và <code>market_service.py</code>, thiết lập
+biến đường dẫn tĩnh <code>HTML_FILE</code> và
+<code>ASSETS_DIR</code>.</td>
+</tr>
+<tr>
+<td
+style="text-align: center;"><strong><code># region 2</code></strong></td>
+<td style="text-align: center;">L29 – L46</td>
+<td style="text-align: left;"><strong>CORS Middleware &amp; Security
+Headers</strong></td>
+<td style="text-align: left;">Thiết lập middleware bảo mật kiểm soát
+CORS (<code>Access-Control-Allow-Origin: *</code>, hỗ trợ
+<code>OPTIONS</code>), đảm bảo trình duyệt có thể gọi API và kết nối
+WebSocket mà không bị chặn chính sách bảo mật mạng.</td>
+</tr>
+<tr>
+<td
+style="text-align: center;"><strong><code># region 3</code></strong></td>
+<td style="text-align: center;">L48 – L72</td>
+<td style="text-align: left;"><strong>Web Server Setup &amp; REST
+Endpoints</strong></td>
+<td style="text-align: left;">Khởi tạo các hàm xử lý REST request:
+<code>handle_index</code> (phục vụ file HTML),
+<code>handle_api_heatmap</code> (lấy dữ liệu treemap theo sàn/ngành),
+<code>handle_api_summary</code> (tổng quan thanh khoản),
+<code>handle_api_indices</code> (điểm số VN-Index),
+<code>handle_api_sectors</code> (danh mục ngành).</td>
+</tr>
+<tr>
+<td
+style="text-align: center;"><strong><code># region 4</code></strong></td>
+<td style="text-align: center;">L74 – L119</td>
+<td style="text-align: left;"><strong>WebSocket Real-time
+Endpoint</strong></td>
+<td style="text-align: left;">Hàm <code>handle_websocket</code>: Xử lý
+bắt tay kết nối WebSocket hai chiều tại <code>/ws</code>, duy trì
+heartbeat 20s, đăng ký client vào danh sách phát sóng của
+<code>StreamHub</code>, ngay lập tức gửi gói tin <code>SNAPSHOT</code>
+và xử lý lệnh <code>GET_SNAPSHOT</code>/<code>PING</code>.</td>
+</tr>
+<tr>
+<td
+style="text-align: center;"><strong><code># region 5</code></strong></td>
+<td style="text-align: center;">L121 – L151</td>
+<td style="text-align: left;"><strong>Lifecycle &amp; Stream Hub
+Bootstrapper</strong></td>
+<td style="text-align: left;">Quản lý vòng đời ứng dụng: Hàm
+<code>init_app()</code> thiết lập các tuyến đường, đăng ký hook sự kiện
+<code>on_startup</code> (kích hoạt luồng StreamHub chạy ngầm và đồng bộ
+dữ liệu) và <code>on_cleanup</code> (đóng an toàn các socket).</td>
+</tr>
+<tr>
+<td
+style="text-align: center;"><strong><code># region 6</code></strong></td>
+<td style="text-align: center;">L153 – L217</td>
+<td style="text-align: left;"><strong>Main Execution, Auto-Restart &amp;
+Auto-Browser</strong></td>
+<td style="text-align: left;">Điểm khởi chạy chính: Tích hợp hàm
+<code>kill_existing_instance(8050)</code> tự động quét và tắt tiến trình
+cũ đang chiếm cổng 8050 giúp thao tác bấm nút <strong>‘Play’ (Run
+File)</strong> trong IDE hoạt động như một cơ chế <strong>1-Click
+Restart</strong> hoàn hảo; hàm <code>fast_exit_signal_handler</code>
+ngắt Ctrl+C tức thời; hàm <code>open_browser</code> tự mở trình duyệt
+sau 1.2s; hàm <code>web.run_app()</code> lắng nghe tại
+<code>127.0.0.1:8050</code>.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="file-2-stream_hub.py-tầng-streaming-bộ-nhớ-ram-state">📂 File 2:
+<a
+href="file:///Users/huydang/Machine%20Learning/Heatmap%20Stocks/stream_hub.py"><code>stream_hub.py</code></a>
+(Tầng Streaming &amp; Bộ Nhớ RAM State)</h3>
+<table>
+<colgroup>
+<col style="width: 27%" />
+<col style="width: 27%" />
+<col style="width: 22%" />
+<col style="width: 22%" />
+</colgroup>
+<thead>
+<tr>
+<th style="text-align: center;">Region</th>
+<th style="text-align: center;">Phạm vi dòng</th>
+<th style="text-align: left;">Tên Region</th>
+<th style="text-align: left;">Chức năng kỹ thuật chi tiết</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td
+style="text-align: center;"><strong><code># region 1</code></strong></td>
+<td style="text-align: center;">L1 – L27</td>
+<td style="text-align: left;"><strong>Imports &amp;
+Configuration</strong></td>
+<td style="text-align: left;">Nạp các module đa luồng
+<code>threading</code>, xử lý bất đồng bộ <code>asyncio</code>, bộ thư
+viện kết nối SignalR của SSI, import đối tượng
+<code>MarketService</code> để nạp dữ liệu khởi tạo.</td>
+</tr>
+<tr>
+<td
+style="text-align: center;"><strong><code># region 2</code></strong></td>
+<td style="text-align: center;">L29 – L242</td>
+<td style="text-align: left;"><strong>Real-time In-memory Store &amp;
+State Management</strong></td>
+<td style="text-align: left;">Lớp <code>MarketStateStore</code>: Quản
+trị toàn bộ dữ liệu 700+ mã cổ phiếu và các chỉ số trên RAM; hàm
+<code>update_stock()</code> cập nhật tick giá siêu tốc <span
+class="math inline"><em>O</em>(1)</span>; hàm tính toán độ rộng thị
+trường (Trần, Tăng, TC, Giảm, Sàn); sử dụng
+<code>threading.Lock()</code> bảo vệ an toàn đa luồng.</td>
+</tr>
+<tr>
+<td
+style="text-align: center;"><strong><code># region 3</code></strong></td>
+<td style="text-align: center;">L244 – L437</td>
+<td style="text-align: left;"><strong>FastConnect WebSocket Stream
+Connector</strong></td>
+<td style="text-align: left;">Lớp <code>StreamHub</code>: Quản lý luồng
+worker kết nối SignalR WebSocket tới máy chủ SSI DataHub
+(<code>fc-datahub.ssi.com.vn</code>), đăng ký kênh <code>X:ALL</code> và
+<code>MI:ALL</code>, cơ chế tự động kết nối lại khi rớt mạng
+(Auto-reconnect) và luồng đồng bộ định kỳ fallback.</td>
+</tr>
+<tr>
+<td
+style="text-align: center;"><strong><code># region 4</code></strong></td>
+<td style="text-align: center;">L439 – L465</td>
+<td style="text-align: left;"><strong>Stream Message Parser &amp; Data
+Validation Pipeline</strong></td>
+<td style="text-align: left;">Bóc tách và kiểm thực dữ liệu luồng: Giải
+mã các gói tin <code>MI</code> (Chỉ số sàn) và <code>X</code> (Khớp lệnh
+thời gian thực), chuẩn hóa dữ liệu số thực, tính lại % biến động theo
+giá tham chiếu và đẩy vào RAM Store.</td>
+</tr>
+<tr>
+<td
+style="text-align: center;"><strong><code># region 5</code></strong></td>
+<td style="text-align: center;">L467 – L470</td>
+<td style="text-align: left;"><strong>Client WebSocket Hub &amp;
+Broadcasting</strong></td>
+<td style="text-align: left;">Quản trị danh sách các WebSocket client
+đang kết nối và triển khai hàm <code>broadcast_tick()</code> để phân
+phối tức thì các sự kiện giá tới trình duyệt người dùng với độ trễ dưới
+16ms.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="file-3-market_service.py-tầng-dịch-vụ-dữ-liệu-phân-ngành">📂
+File 3: <a
+href="file:///Users/huydang/Machine%20Learning/Heatmap%20Stocks/market_service.py"><code>market_service.py</code></a>
+(Tầng Dịch Vụ Dữ Liệu &amp; Phân Ngành)</h3>
+<table>
+<colgroup>
+<col style="width: 27%" />
+<col style="width: 27%" />
+<col style="width: 22%" />
+<col style="width: 22%" />
+</colgroup>
+<thead>
+<tr>
+<th style="text-align: center;">Region</th>
+<th style="text-align: center;">Phạm vi dòng</th>
+<th style="text-align: left;">Tên Region</th>
+<th style="text-align: left;">Chức năng kỹ thuật chi tiết</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td
+style="text-align: center;"><strong><code># region 1</code></strong></td>
+<td style="text-align: center;">L1 – L62</td>
+<td style="text-align: left;"><strong>Imports &amp;
+Configuration</strong></td>
+<td style="text-align: left;">Nạp <code>pandas</code>,
+<code>requests</code>, thư viện <code>ssi_fc_data.model</code>, cấu hình
+thư mục cache cục bộ <code>/cache</code>, nạp thông tin khóa từ
+<code>config.json</code> và định nghĩa các URL máy chủ SSI
+FastConnect.</td>
+</tr>
+<tr>
+<td
+style="text-align: center;"><strong><code># region 2</code></strong></td>
+<td style="text-align: center;">L64 – L127</td>
+<td style="text-align: left;"><strong>Authentication &amp; FastConnect
+Client Vault</strong></td>
+<td style="text-align: left;">Quản lý phiên làm việc bảo mật: Khởi tạo
+singleton <code>MarketDataClient</code>, ký số RSA PrivateKey, tự động
+cấp phát và làm mới Access Token định kỳ, lưu cache token vào file tránh
+gọi lại nhiều lần.</td>
+</tr>
+<tr>
+<td
+style="text-align: center;"><strong><code># region 3</code></strong></td>
+<td style="text-align: center;">L129 – L329</td>
+<td style="text-align: left;"><strong>Dynamic Sector
+Processing</strong></td>
+<td style="text-align: left;">Tầng phân ngành chuyên nghiệp: Định nghĩa
+tĩnh <code>_default_sectors</code> cho ~250 mã cốt lõi thuộc 15 nhóm
+ngành chuẩn SSI/Vietstock; hàm <code>get_dynamic_sectors()</code> quét
+động 3,000+ mã từ VNDirect API; hàm <code>_normalize_industry()</code>
+chuẩn hóa từ khóa tiếng Việt.</td>
+</tr>
+<tr>
+<td
+style="text-align: center;"><strong><code># region 4</code></strong></td>
+<td style="text-align: center;">L331 – L591</td>
+<td style="text-align: left;"><strong>SSI Market Data &amp; Indices
+Fetcher</strong></td>
+<td style="text-align: left;">Hàm <code>get_ssi_indices()</code> lấy
+điểm số chuẩn xác của VN-Index, HNX, UPCoM từ SSI kết hợp dự phòng
+VNDirect finfo; hàm <code>get_ssi_live_stocks()</code> lấy giá khớp, giá
+tham chiếu và thanh khoản kèm thuật toán trượt 10 ngày lùi phiên khi thị
+trường nghỉ lễ.</td>
+</tr>
+<tr>
+<td
+style="text-align: center;"><strong><code># region 5</code></strong></td>
+<td style="text-align: center;">L593 – L662</td>
+<td style="text-align: left;"><strong>Data Pipeline &amp; Heatmap
+Dataset Generator</strong></td>
+<td style="text-align: left;">Pipeline chuẩn hóa dữ liệu sang DataFrame
+của Pandas: Tính giá trị giao dịch theo tỷ đồng
+(<code>traded_value = raw_val / 1 tỷ</code>), tính % biến động thô, lọc
+bỏ mã rác thanh khoản nhỏ hơn 0.02 tỷ đồng.</td>
+</tr>
+<tr>
+<td
+style="text-align: center;"><strong><code># region 6</code></strong></td>
+<td style="text-align: center;">L664 – L688</td>
+<td style="text-align: left;"><strong>UI Controllers &amp; Summary
+Accessors</strong></td>
+<td style="text-align: left;">Cung cấp các hàm giao tiếp tầng ngoài:
+<code>get_unique_sectors()</code> phục vụ dropdown ngành trên giao diện
+và hàm cấp phát singleton
+<code>get_market_service_instance()</code>.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="file-4-bauhaus-ui.html-tầng-giao-diện-client-spa">📂 File 4: <a
+href="file:///Users/huydang/Machine%20Learning/Heatmap%20Stocks/bauhaus-ui.html"><code>bauhaus-ui.html</code></a>
+(Tầng Giao Diện Client SPA)</h3>
+<table>
+<colgroup>
+<col style="width: 27%" />
+<col style="width: 27%" />
+<col style="width: 22%" />
+<col style="width: 22%" />
+</colgroup>
+<thead>
+<tr>
+<th style="text-align: center;">Region</th>
+<th style="text-align: center;">Phạm vi dòng</th>
+<th style="text-align: left;">Tên Region</th>
+<th style="text-align: left;">Chức năng kỹ thuật chi tiết</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td
+style="text-align: center;"><strong><code># Region [1]</code></strong></td>
+<td style="text-align: center;">L15 – L620</td>
+<td style="text-align: left;"><strong>Design System Tokens &amp; Dark
+Theme</strong></td>
+<td style="text-align: left;">Định nghĩa biến CSS (Màu tăng
+<code>#00c073</code>, giảm <code>#ef4444</code>, tham chiếu
+<code>#facc15</code>, trần <code>#a855f7</code>, sàn
+<code>#06b6d4</code>), nhúng Google Font <code>Be Vietnam Pro</code>, hệ
+thống layout Flexbox Responsive Drawer (<code>.sidebar-open</code>,
+<code>.sidebar-backdrop</code>, <code>@media &lt;= 1024px</code>).</td>
+</tr>
+<tr>
+<td
+style="text-align: center;"><strong><code># Region [2]</code></strong></td>
+<td style="text-align: center;">L625 – L675</td>
+<td style="text-align: left;"><strong>Header &amp; Navigation
+Bar</strong></td>
+<td style="text-align: left;">Thanh điều hướng trên cùng: Nút Toggle
+<code>[ ◀ Bảng chỉ số ]</code> / <code>[ 📊 Bảng chỉ số ]</code>, các
+tab chọn sàn (Tất cả, HOSE, HNX, UPCoM), menu chọn ngành, chọn tiêu chí
+diện tích (GTGD / KLGD), ô tìm kiếm mã, đèn trạng thái kết nối stream
+(<code>FASTCONNECT LIVE</code> / <code>POLLING LIVE</code>).</td>
+</tr>
+<tr>
+<td
+style="text-align: center;"><strong><code># Region [3]</code></strong></td>
+<td style="text-align: center;">L677 – L805</td>
+<td style="text-align: left;"><strong>Main Grid Layout (Left Sidebar
+&amp; Treemap)</strong></td>
+<td style="text-align: left;">Cột trái (Thẻ 3 chỉ số thị trường, Thanh
+đo tỷ lệ độ rộng Tăng/Đứng/Giảm, Top 6 nhóm ngành dẫn dắt dòng tiền,
+Live Inspector soi chi tiết mã) và Cột phải
+(<code>#treemap-canvas</code> chiếm 100% không gian trung tâm).</td>
+</tr>
+<tr>
+<td
+style="text-align: center;"><strong><code># Region [4]</code></strong></td>
+<td style="text-align: center;">L810 – L840</td>
+<td style="text-align: left;"><strong>Footer &amp; Market Color
+Legend</strong></td>
+<td style="text-align: left;">Thanh dưới đáy hiển thị số lượng mã phân
+bổ theo 5 màu thị trường (Trần, Tăng, Đứng giá, Giảm, Sàn), chú giải bản
+quyền kết nối trực tiếp SSI FastConnect và đồng hồ thời gian thực.</td>
+</tr>
+<tr>
+<td
+style="text-align: center;"><strong><code># Region [5]</code></strong></td>
+<td style="text-align: center;">L845 – L945</td>
+<td style="text-align: left;"><strong>Libraries &amp; Geometry-Driven
+ZRender Hook</strong></td>
+<td style="text-align: left;">Nạp ECharts 5.4.3 CDN và kích hoạt cơ chế
+can thiệp đồ họa <strong>ZRender Hook</strong>
+(<code>Rect.prototype.setTextContent</code>): Đo kích thước pixel ô chữ
+nhật <span
+class="math inline"><em>W</em><em>i</em><em>m</em><em>e</em><em>s</em><em>H</em></span>,
+căn giữa tuyệt đối nhãn chữ tại trọng tâm hình học
+(<code>Centroid</code>), tự động ẩn chữ ở ô nhỏ <span
+class="math inline"> &lt; 38<em>e</em><em>x</em><em>t</em><em>p</em><em>x</em></span>
+để chống tràn viền.</td>
+</tr>
+<tr>
+<td
+style="text-align: center;"><strong><code># Region [6]</code></strong></td>
+<td style="text-align: center;">L949 – L1130</td>
+<td style="text-align: left;"><strong>Real-time WebSocket Client &amp;
+Data Pipeline</strong></td>
+<td style="text-align: left;">Khởi tạo đối tượng <code>AppState</code>,
+thiết lập kết nối WebSocket <code>/ws</code>, chuyển đổi trạng thái
+<code>FASTCONNECT LIVE</code> và <code>POLLING LIVE</code>, cơ chế tự
+động kết nối lại (Auto-reconnect), nạp nhanh dữ liệu ban đầu qua REST
+<code>fetchInitialRest()</code>, hàm định dạng tỷ lệ
+<code>formatPct()</code>.</td>
+</tr>
+<tr>
+<td
+style="text-align: center;"><strong><code># Region [7]</code></strong></td>
+<td style="text-align: center;">L1135 – L1718</td>
+<td style="text-align: left;"><strong>Market UI Controller &amp;
+Interaction Handlers</strong></td>
+<td style="text-align: left;">Khởi tạo Treemap ECharts đa tầng, hàm
+<code>toggleSidebar()</code> điều khiển ngăn kéo Drawer khi co màn hình,
+bộ theo dõi <code>ResizeObserver</code> co dãn mượt mà, sự kiện click mã
+soi thông tin, click ngành để zoom sâu và phím <code>Esc</code> quay lại
+toàn cảnh.</td>
+</tr>
+</tbody>
+</table>
+
+  </div>
+</body>
+</html>

@@ -1,0 +1,1719 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Bản đồ thị trường · Finance Heatmap Real-time</title>
+
+  <!-- Font Be Vietnam Pro chuẩn giao diện tài chính tiếng Việt sắc nét -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400&display=swap" rel="stylesheet">
+
+  <!--
+    ┌──────────────────────────────────────────────────────────────┐
+    │ # Region [1] — Design System Tokens & Dark Financial Theme   │
+    │ Bảng màu chuyên biệt cho Thị trường tài chính Việt Nam       │
+    │ Tối ưu độ tương phản cao, hiện đại theo chuẩn finance.vietstock│
+    └──────────────────────────────────────────────────────────────┘
+  -->
+  <style>
+    :root {
+      /* Dark Financial Palette */
+      --bg-main:       #0d0e12;
+      --bg-panel:      #16181d;
+      --bg-subpanel:   #1f2229;
+      --border:        #2d3139;
+      --border-focus:  #4f5666;
+      
+      --text-primary:   #ffffff;
+      --text-secondary: #949ba8;
+      --text-muted:     #636a78;
+
+      /* Hệ màu phẳng chuẩn ban đầu (Vietstock & SSI Original) */
+      --c-ceil:        #a855f7;   /* Tím - Tăng trần */
+      --c-gain:        #00c073;   /* Xanh lá - Tăng giá */
+      --c-ref:         #facc15;   /* Vàng - Tham chiếu / Đứng giá */
+      --c-loss:        #ef4444;   /* Đỏ - Giảm giá */
+      --c-floor:       #06b6d4;   /* Xanh lơ - Giảm sàn */
+
+      /* Font chữ Be Vietnam Pro không chân, trực quan, tinh tế */
+      --font-ui:   'Be Vietnam Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      --font-mono: 'SF Mono', 'Roboto Mono', Menlo, Monaco, Consolas, monospace;
+      --radius:    4px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    
+    /* ─── Tùy biến thanh cuộn Dark Theme ──────────────────────────── */
+    * {
+      scrollbar-width: thin;
+      scrollbar-color: #2e3440 #111317;
+    }
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #111317;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #2b3240;
+      border-radius: 3px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #3e4859;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      background: var(--bg-main);
+      color: var(--text-primary);
+      font-family: var(--font-ui);
+      font-size: 13px;
+      line-height: 1.4;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    button, input, select, textarea {
+      font-family: inherit;
+    }
+
+    .app-layout {
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      width: 100vw;
+      overflow: hidden;
+    }
+
+    /* ─── Top Header & Controls ──────────────────────────────────────── */
+    .top-header {
+      background: var(--bg-panel);
+      border-bottom: 1px solid var(--border);
+      padding: 0 16px;
+      height: 48px;
+      min-height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      z-index: 100;
+    }
+    .brand-section {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .brand-badge {
+      background: #2563eb;
+      color: #fff;
+      font-family: var(--font-mono);
+      font-weight: 800;
+      font-size: 13px;
+      padding: 3px 8px;
+      border-radius: var(--radius);
+      letter-spacing: 0.05em;
+    }
+    .brand-name {
+      font-weight: 700;
+      font-size: 15px;
+      letter-spacing: -0.01em;
+      white-space: nowrap;
+    }
+
+    .toolbar-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .nav-tabs-group {
+      display: inline-flex;
+      background: var(--bg-subpanel);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 2px;
+    }
+    .tab-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-secondary);
+      font-size: 12px;
+      font-weight: 600;
+      padding: 4px 12px;
+      cursor: pointer;
+      border-radius: var(--radius);
+      transition: all 0.15s ease;
+    }
+    .tab-btn:hover {
+      color: var(--text-primary);
+    }
+    .tab-btn.active {
+      background: #2563eb;
+      color: #ffffff;
+    }
+
+    .form-select, .form-input {
+      background: var(--bg-subpanel);
+      border: 1px solid var(--border);
+      color: var(--text-primary);
+      font-family: var(--font-ui);
+      font-size: 12px;
+      padding: 4px 10px;
+      border-radius: var(--radius);
+      outline: none;
+      height: 28px;
+    }
+    .form-select:focus, .form-input:focus {
+      border-color: #2563eb;
+    }
+
+    .status-indicator {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 600;
+    }
+    .pulse-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--c-gain);
+      display: inline-block;
+    }
+    .pulse-dot.live {
+      animation: pulse 1.5s infinite;
+    }
+    .pulse-dot.offline {
+      background: var(--c-loss);
+    }
+    @keyframes pulse {
+      0% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(1.3); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+
+    /* ─── Main Content (ECharts là TRỌNG TÂM 100% - Cột trái là phụ) ────────── */
+    .main-container {
+      display: flex;
+      flex-direction: row;
+      flex: 1;
+      height: calc(100vh - 84px);
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* DESKTOP MÀN HÌNH LỚN (> 1024px) */
+    @media (min-width: 1025px) {
+      .mobile-only {
+        display: none !important;
+      }
+      .left-sidebar {
+        width: 260px;
+        min-width: 260px;
+        max-width: 260px;
+        flex-shrink: 0;
+        background: var(--bg-panel);
+        border-right: 1px solid var(--border);
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        overflow-y: auto;
+        transition: margin-left 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        z-index: 10;
+      }
+      .main-container.sidebar-collapsed .left-sidebar {
+        margin-left: -260px;
+      }
+      .sidebar-backdrop {
+        display: none !important;
+      }
+    }
+
+    /* MỞ NỬA MÀN HÌNH (SPLIT-SCREEN), TABLET & ĐIỆN THOẠI (<= 1024px) */
+    @media (max-width: 1024px) {
+      .main-container {
+        height: calc(100vh - 84px);
+        position: relative;
+        overflow: hidden;
+      }
+      /* ECharts luôn chiếm 100% không gian hiển thị chính */
+      .right-treemap-area {
+        width: 100% !important;
+        height: 100% !important;
+        flex: 1;
+        min-width: 0;
+      }
+      /* Cột trái chuyển thành Drawer trượt từ cạnh trái đè lên bản đồ */
+      .left-sidebar {
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        width: min(300px, 85vw);
+        max-width: 320px;
+        height: 100vh;
+        z-index: 1000;
+        background: #16181d;
+        border-right: 1px solid var(--border);
+        box-shadow: 6px 0 24px rgba(0, 0, 0, 0.7);
+        transform: translateX(-100%);
+        transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+        display: flex;
+        flex-direction: column;
+        overflow-y: auto;
+      }
+      .main-container.sidebar-open .left-sidebar {
+        transform: translateX(0);
+      }
+      /* Lớp phủ Backdrop làm tối nền khi mở Drawer trên màn hình nhỏ */
+      .sidebar-backdrop {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.65);
+        backdrop-filter: blur(2px);
+        z-index: 999;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.25s ease;
+      }
+      .main-container.sidebar-open .sidebar-backdrop {
+        opacity: 1;
+        pointer-events: auto;
+      }
+
+      /* Header Drawer trên mobile/tablet */
+      .drawer-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 10px 14px;
+        background: #1a1d24;
+        border-bottom: 1px solid var(--border);
+      }
+      .drawer-title {
+        font-size: 12px;
+        font-weight: 700;
+        color: var(--text-primary);
+      }
+      .drawer-close-btn {
+        background: transparent;
+        border: none;
+        color: var(--text-secondary);
+        font-size: 18px;
+        line-height: 1;
+        cursor: pointer;
+        padding: 2px 6px;
+        border-radius: 4px;
+      }
+      .drawer-close-btn:hover {
+        color: #ffffff;
+        background: rgba(255, 255, 255, 0.1);
+      }
+
+      /* Header co giãn vừa vặn trên màn hình nhỏ */
+      .top-header {
+        height: auto;
+        min-height: 48px;
+        padding: 4px 10px;
+        flex-wrap: wrap;
+        gap: 6px;
+      }
+      .brand-section {
+        gap: 8px;
+      }
+      .brand-name {
+        font-size: 14px;
+      }
+      .toolbar-group {
+        gap: 6px;
+      }
+      .tab-btn {
+        padding: 3px 8px;
+        font-size: 11px;
+      }
+      .form-select, .form-input {
+        height: 26px;
+        font-size: 11px;
+        padding: 2px 6px;
+      }
+      .status-indicator {
+        font-size: 10px;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .main-container {
+        height: calc(100vh - 96px);
+      }
+      .brand-name {
+        font-size: 13px;
+      }
+      .brand-badge {
+        font-size: 10px;
+        padding: 2px 5px;
+      }
+      #market-tabs .tab-btn, #metric-tabs .tab-btn {
+        padding: 2px 6px;
+        font-size: 10px;
+      }
+      #search-symbol {
+        width: 65px !important;
+      }
+      .bottom-bar {
+        height: 32px;
+        min-height: 32px;
+        font-size: 10px;
+        padding: 0 8px;
+      }
+      .color-legend {
+        gap: 8px;
+      }
+    }
+
+    /* Nút thu gọn / mở rộng bảng thống kê */
+    .sidebar-toggle-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 9px;
+      background: var(--bg-subpanel);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      color: var(--text-secondary);
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .sidebar-toggle-btn:hover {
+      background: #252830;
+      color: var(--text-primary);
+      border-color: #3b82f6;
+    }
+
+    /* ─── Cột Trái: Chỉ Số & Thống Kê Chuẩn Vietstock ───────────────── */
+    .left-sidebar {
+      background: var(--bg-panel);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      overflow-y: auto;
+    }
+
+    .indices-header {
+      padding: 8px 12px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      background: var(--bg-subpanel);
+    }
+    .index-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-family: var(--font-mono);
+    }
+    .index-name {
+      font-weight: 700;
+      font-size: 11px;
+      color: var(--text-primary);
+    }
+    .index-metrics {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .market-facts-card {
+      padding: 8px 12px;
+      border-bottom: 1px solid var(--border);
+    }
+    .card-heading {
+      font-size: 10.5px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--text-secondary);
+      margin-bottom: 6px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .fact-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 3px 0;
+      border-bottom: 1px dashed rgba(255, 255, 255, 0.05);
+      font-size: 11.5px;
+    }
+    .fact-row:last-child { border-bottom: none; }
+    .fact-label { color: var(--text-secondary); }
+    .fact-val { font-family: var(--font-mono); font-weight: 700; text-align: right; }
+
+    /* Thanh tỉ lệ độ rộng thị trường */
+    .breadth-bar {
+      display: flex;
+      height: 5px;
+      width: 100%;
+      border-radius: 3px;
+      overflow: hidden;
+      margin-top: 7px;
+      background: #1a1d24;
+    }
+    .breadth-bar-gain { background: var(--c-gain); transition: width 0.3s ease; }
+    .breadth-bar-ref  { background: var(--c-ref);  transition: width 0.3s ease; }
+    .breadth-bar-loss { background: var(--c-loss); transition: width 0.3s ease; }
+
+    /* Top ngành dẫn dắt dòng tiền */
+    .top-sectors-card {
+      padding: 8px 12px;
+      border-bottom: 1px solid var(--border);
+      flex: 1;
+      overflow-y: auto;
+      min-height: 120px;
+    }
+    .top-sector-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 4px 0;
+      font-size: 11px;
+      border-bottom: 1px dashed rgba(255, 255, 255, 0.04);
+      cursor: pointer;
+      transition: color 0.15s;
+    }
+    .top-sector-row:hover {
+      color: var(--c-gain);
+    }
+    .top-sector-name {
+      color: var(--text-secondary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 120px;
+    }
+    .top-sector-val {
+      font-family: var(--font-mono);
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .stock-detail-panel {
+      padding: 8px 12px;
+      background: var(--bg-subpanel);
+      border-top: 1px solid var(--border);
+    }
+    .detail-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+      margin-top: 6px;
+    }
+    .detail-cell {
+      background: var(--bg-panel);
+      padding: 5px 8px;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+    }
+    .detail-cell .lbl { font-size: 10px; color: var(--text-muted); text-transform: uppercase; }
+    .detail-cell .val { font-family: var(--font-mono); font-size: 12px; font-weight: 700; margin-top: 1px; }
+
+    /* ─── Cột Phải: Treemap ECharts ────────────────────────────────── */
+    .right-treemap-area {
+      background: var(--bg-main);
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      flex: 1;
+      min-width: 0;
+      position: relative;
+    }
+    #treemap-canvas {
+      width: 100%;
+      height: 100%;
+      flex: 1;
+    }
+
+    /* ─── Breadcrumb Pill trên Header ─────────────────────────────── */
+    .back-pill-btn {
+      background: #1e293b;
+      color: #38bdf8;
+      border: 1px solid #0284c7;
+      border-radius: 4px;
+      padding: 4px 9px;
+      font-size: 11px;
+      font-weight: 700;
+      font-family: var(--font-mono);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.15s ease;
+    }
+    .back-pill-btn:hover {
+      background: #0284c7;
+      color: #ffffff;
+      box-shadow: 0 0 8px rgba(2, 132, 199, 0.4);
+    }
+    .sector-active-badge {
+      background: #00c073;
+      color: #0d0e12;
+      font-weight: 800;
+      font-size: 11px;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-family: var(--font-mono);
+    }
+
+    /* ─── Bottom Footer & Color Scale Legend ───────────────────────── */
+    .bottom-bar {
+      background: #111317;
+      border-top: 1px solid var(--border);
+      height: 36px;
+      min-height: 36px;
+      padding: 0 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 11px;
+      font-family: var(--font-mono);
+      color: var(--text-secondary);
+      z-index: 50;
+    }
+    .color-legend {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .color-box {
+      width: 11px;
+      height: 11px;
+      border-radius: 1px;
+      display: inline-block;
+    }
+
+    .c-ceil  { color: var(--c-ceil); }
+    .c-gain  { color: var(--c-gain); }
+    .c-ref   { color: var(--c-ref); }
+    .c-loss  { color: var(--c-loss); }
+    .c-floor { color: var(--c-floor); }
+  </style>
+</head>
+<body>
+
+  <div class="app-layout">
+    
+    <!--
+      ┌──────────────────────────────────────────────────────────────┐
+      │ # Region [2] — Header & Navigation Bar                       │
+      └──────────────────────────────────────────────────────────────┘
+    -->
+    <header class="top-header">
+      <div class="brand-section">
+        <div class="brand-badge">LIVE</div>
+        <div class="brand-name">BẢN ĐỒ THỊ TRƯỜNG</div>
+      </div>
+
+      <div class="toolbar-group">
+        <button id="btn-toggle-sidebar" class="sidebar-toggle-btn" onclick="toggleSidebar()" title="Thu gọn / Mở rộng bảng chỉ số (Chuyển sang 100% Heatmap)">
+          <span id="sidebar-toggle-icon">◀</span> Bảng chỉ số
+        </button>
+
+        <div class="nav-tabs-group" id="market-tabs">
+          <button class="tab-btn active" data-market="ALL">Tất cả sàn</button>
+          <button class="tab-btn" data-market="HOSE">HOSE</button>
+          <button class="tab-btn" data-market="HNX">HNX</button>
+          <button class="tab-btn" data-market="UPCOM">UPCoM</button>
+        </div>
+
+        <!-- Thanh điều hướng Breadcrumb khi đang zoom 1 ngành -->
+        <div id="breadcrumb-toolbar" style="display: none; align-items: center; gap: 6px;">
+          <button class="back-pill-btn" onclick="resetSectorZoom()" title="Bấm vào đây hoặc phím Esc để quay lại tất cả ngành">
+            <span>⬅</span> Tất cả ngành <kbd style="background: rgba(255,255,255,0.18); padding: 1px 5px; border-radius: 3px; font-size: 10px; margin-left: 2px;">Esc</kbd>
+          </button>
+          <span style="color: var(--text-muted); font-size: 12px;">›</span>
+          <span class="sector-active-badge" id="header-sector-badge">Tài chính</span>
+        </div>
+
+        <select id="sector-filter" class="form-select">
+          <option value="ALL">Tất cả ngành (VS-Sector)</option>
+        </select>
+
+        <div class="nav-tabs-group" id="metric-tabs">
+          <button class="tab-btn active" data-metric="traded_value">GT giao dịch</button>
+          <button class="tab-btn" data-metric="traded_vol_mil">KL giao dịch</button>
+        </div>
+
+        <input type="text" id="search-symbol" class="form-input" placeholder="Mã CK..." style="width: 85px; text-transform: uppercase;" />
+      </div>
+
+      <div class="status-indicator">
+        <span id="conn-dot" class="pulse-dot live"></span>
+        <span id="conn-text">FASTCONNECT LIVE</span>
+        <span style="color: var(--border); margin: 0 4px;">|</span>
+        <span id="total-stocks-badge" style="color: var(--text-primary);">0 MÃ</span>
+      </div>
+    </header>
+
+    <!--
+      ┌──────────────────────────────────────────────────────────────┐
+      │ # Region [3] — Main Grid Layout (Left Sidebar & Treemap)     │
+      └──────────────────────────────────────────────────────────────┘
+    -->
+    <div class="main-container" id="main-container">
+      
+      <!-- CỘT TRÁI: CHỈ SỐ & THỐNG KÊ THỊ TRƯỜNG CHUẨN VIETSTOCK -->
+      <aside class="left-sidebar" id="app-sidebar">
+        
+        <!-- Header Drawer dành riêng cho nửa màn hình, tablet & mobile -->
+        <div class="drawer-header mobile-only">
+          <span class="drawer-title">📊 BẢNG CHỈ SỐ & DÒNG TIỀN</span>
+          <button class="drawer-close-btn" onclick="toggleSidebar(false)" title="Đóng bảng chỉ số">✕</button>
+        </div>
+        
+        <!-- Chỉ số thị trường -->
+        <div class="indices-header">
+          <div class="index-row">
+            <span class="index-name">VN-Index</span>
+            <div class="index-metrics">
+              <span id="vnindex-val" class="c-loss">1,819.60</span>
+              <span id="vnindex-chg" class="c-loss">▼ -12.52 (-0.68%)</span>
+            </div>
+          </div>
+          <div class="index-row">
+            <span class="index-name">HNX-Index</span>
+            <div class="index-metrics">
+              <span id="hnxindex-val" class="c-loss">282.71</span>
+              <span id="hnxindex-chg" class="c-loss">▼ -2.06 (-0.72%)</span>
+            </div>
+          </div>
+          <div class="index-row">
+            <span class="index-name">UPCoM-Index</span>
+            <div class="index-metrics">
+              <span id="upindex-val" class="c-gain">127.69</span>
+              <span id="upindex-chg" class="c-gain">▲ +0.19 (+0.15%)</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Thống kê tổng quan chuẩn Vietstock -->
+        <div class="market-facts-card">
+          <div class="card-heading">
+            <span>TỔNG QUAN THỊ TRƯỜNG</span>
+            <span id="current-scope-lbl" style="color: #3b82f6;">TOÀN SÀN</span>
+          </div>
+
+          <div class="fact-row">
+            <span class="fact-label">GTGD (Tỷ)</span>
+            <span class="fact-val" id="stat-val">—</span>
+          </div>
+          <div class="fact-row">
+            <span class="fact-label">KLGD (Tr CP)</span>
+            <span class="fact-val" id="stat-vol">—</span>
+          </div>
+          <div class="fact-row">
+            <span class="fact-label">Số lượng CP</span>
+            <span class="fact-val" id="stat-count">—</span>
+          </div>
+          <div class="fact-row">
+            <span class="fact-label">Tăng / Giảm / TC</span>
+            <div class="fact-val">
+              <span class="c-gain" id="stat-up">0</span> / 
+              <span class="c-loss" id="stat-down">0</span> / 
+              <span class="c-ref" id="stat-ref">0</span>
+            </div>
+          </div>
+          <div class="fact-row">
+            <span class="fact-label">Trần / Sàn</span>
+            <div class="fact-val">
+              <span class="c-ceil" id="stat-ceil">0</span> / 
+              <span class="c-floor" id="stat-floor">0</span>
+            </div>
+          </div>
+
+          <!-- Thanh tỉ lệ độ rộng thị trường -->
+          <div class="breadth-bar" title="Độ rộng thị trường: Xanh (Tăng) / Vàng (TC) / Đỏ (Giảm)">
+            <div id="bar-gain" class="breadth-bar-gain" style="width: 33%;"></div>
+            <div id="bar-ref"  class="breadth-bar-ref"  style="width: 33%;"></div>
+            <div id="bar-loss" class="breadth-bar-loss" style="width: 34%;"></div>
+          </div>
+        </div>
+
+        <!-- Top Nhóm Ngành Dẫn Dắt Dòng Tiền (Chuẩn Vietstock) -->
+        <div class="top-sectors-card">
+          <div class="card-heading" style="margin-bottom: 5px;">
+            <span>TOP DÒNG TIỀN NGÀNH</span>
+            <span style="color: var(--text-muted); font-size: 10px;">GTGD</span>
+          </div>
+          <div id="top-sectors-list">
+            <div style="color: var(--text-muted); font-size: 11px; padding: 6px 0;">Đang tính toán...</div>
+          </div>
+        </div>
+
+        <!-- Khối chi tiết mã (Live Inspector - Finviz style) -->
+        <div class="stock-detail-panel">
+          <div class="card-heading" style="margin-bottom: 4px;">
+            <span id="det-title">LIVE INSPECTOR</span>
+            <span id="det-sector" style="color: var(--text-muted); font-size: 11px;">Rà chuột vào ô</span>
+          </div>
+          <div class="detail-grid">
+            <div class="detail-cell">
+              <div class="lbl">Giá khớp</div>
+              <div class="val" id="det-price">—</div>
+            </div>
+            <div class="detail-cell">
+              <div class="lbl">Biến động</div>
+              <div class="val" id="det-change">—</div>
+            </div>
+            <div class="detail-cell">
+              <div class="lbl">Tham chiếu</div>
+              <div class="val" id="det-ref">—</div>
+            </div>
+            <div class="detail-cell">
+              <div class="lbl">Tổng GTGD</div>
+              <div class="val" id="det-val">—</div>
+            </div>
+          </div>
+        </div>
+
+      </aside>
+
+      <!-- Lớp phủ Backdrop khi mở drawer trên nửa màn hình/tablet/mobile -->
+      <div id="sidebar-backdrop" class="sidebar-backdrop" onclick="toggleSidebar(false)"></div>
+
+      <!-- CỘT PHẢI: TREEMAP ECHARTS (100% SẠCH SẼ, KHÔNG BỊ ĐÈ CHỮ) -->
+      <main class="right-treemap-area">
+        <div id="treemap-canvas"></div>
+      </main>
+
+    </div>
+
+    <!--
+      ┌──────────────────────────────────────────────────────────────┐
+      │ # Region [4] — Footer & Market Color Legend                  │
+      └──────────────────────────────────────────────────────────────┘
+    -->
+    <footer class="bottom-bar">
+      <div class="color-legend">
+        <div class="legend-item">
+          <span class="color-box" style="background: var(--c-ceil);"></span>
+          <span>Tăng trần: <b id="leg-ceil" class="c-ceil">0</b></span>
+        </div>
+        <div class="legend-item">
+          <span class="color-box" style="background: var(--c-gain);"></span>
+          <span>Tăng giá: <b id="leg-up" class="c-gain">0</b></span>
+        </div>
+        <div class="legend-item">
+          <span class="color-box" style="background: var(--c-ref);"></span>
+          <span>Đứng giá: <b id="leg-ref" class="c-ref">0</b></span>
+        </div>
+        <div class="legend-item">
+          <span class="color-box" style="background: var(--c-loss);"></span>
+          <span>Giảm giá: <b id="leg-down" class="c-loss">0</b></span>
+        </div>
+        <div class="legend-item">
+          <span class="color-box" style="background: var(--c-floor);"></span>
+          <span>Giảm sàn: <b id="leg-floor" class="c-floor">0</b></span>
+        </div>
+      </div>
+
+      <div>
+        <span>Dữ liệu: SSI FASTCONNECT &bull; Cập nhật: <span id="clock-txt">--:--:--</span></span>
+      </div>
+    </footer>
+
+  </div>
+
+  <!--
+    ┌──────────────────────────────────────────────────────────────┐
+    │ # Region [5] — Libraries & ECharts Heatmap Engine            │
+    └──────────────────────────────────────────────────────────────┘
+  -->
+  <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+
+  <!--
+    ┌──────────────────────────────────────────────────────────────┐
+    │ # ECharts Treemap Geometry-Driven Engine Patch               │
+    │ 1. Tự động hiển thị và co giãn chữ theo kích thước thật ô   │
+    │ 2. Chỉ ẩn khi kích thước ô quá nhỏ (< 38px x 24px)           │
+    │ 3. Căn giữa trọng tâm trục Y tuyệt đối                      │
+    └──────────────────────────────────────────────────────────────┘
+  -->
+  <script>
+    (function() {
+      if (typeof echarts === 'undefined' || !echarts.graphic || !echarts.graphic.Rect) return;
+      const origSetTextContent = echarts.graphic.Rect.prototype.setTextContent;
+      echarts.graphic.Rect.prototype.setTextContent = function(textEl) {
+        const res = origSetTextContent.apply(this, arguments);
+        const rectEl = this;
+        if (textEl) {
+          let customBeforeUpdate = null;
+          Object.defineProperty(textEl, 'beforeUpdate', {
+            set: function(fn) {
+              if (typeof fn === 'function') {
+                customBeforeUpdate = function() {
+                  fn.apply(this, arguments);
+                  
+                  // A. Xử lý ô cổ phiếu (leaf node)
+                  if (!this.disableLabelLayout && rectEl && rectEl.shape) {
+                    const w = rectEl.shape.width || 0;
+                    const h = rectEl.shape.height || 0;
+
+                    // 1. Kiểm tra kích thước hình học thuần túy:
+                    // Chỉ ẩn khi ô quá nhỏ không đủ diện tích chứa chữ (w < 38px hoặc h < 24px)
+                    if (w < 38 || h < 24) {
+                      this.ignore = true;
+                      return;
+                    }
+
+                    this.ignore = false;
+
+                    // 2. Co giãn kích thước font theo tỷ lệ diện tích ô thực tế (Geometry-Driven):
+                    if (this.style && this.style.rich) {
+                      if (w >= 130 && h >= 75) {
+                        // Ô rất to
+                        this.style.rich.sym.fontSize = 20;
+                        this.style.rich.sym.lineHeight = 26;
+                        this.style.rich.pct.fontSize = 14;
+                        this.style.rich.pct.lineHeight = 18;
+                      } else if (w >= 80 && h >= 48) {
+                        // Ô to vừa
+                        this.style.rich.sym.fontSize = 15;
+                        this.style.rich.sym.lineHeight = 20;
+                        this.style.rich.pct.fontSize = 12;
+                        this.style.rich.pct.lineHeight = 16;
+                      } else if (w >= 52 && h >= 32) {
+                        // Ô trung bình
+                        this.style.rich.sym.fontSize = 12;
+                        this.style.rich.sym.lineHeight = 15;
+                        this.style.rich.pct.fontSize = 10;
+                        this.style.rich.pct.lineHeight = 13;
+                      } else {
+                        // Ô nhỏ nhưng vẫn đủ chứa chữ gọn gàng
+                        this.style.rich.sym.fontSize = 9.5;
+                        this.style.rich.sym.lineHeight = 12;
+                        this.style.rich.pct.fontSize = 8;
+                        this.style.rich.pct.lineHeight = 10;
+                      }
+                    }
+
+                    // 3. Giải phóng style.height để chữ căn giữa tâm tuyệt đối
+                    if (this.style && this.style.height !== undefined) {
+                      this.style.height = undefined;
+                    }
+                  } else if (this.disableLabelLayout && rectEl && rectEl.shape) {
+                    // B. Đối với thanh tiêu đề ngành (upperLabel): Ẩn nếu khung ngành quá hẹp
+                    const w = rectEl.shape.width || 0;
+                    const h = rectEl.shape.height || 0;
+                    if (w < 60 || h < 35) {
+                      this.ignore = true;
+                    } else {
+                      this.ignore = false;
+                    }
+                  }
+                };
+              } else {
+                customBeforeUpdate = fn;
+              }
+            },
+            get: function() {
+              return customBeforeUpdate;
+            },
+            configurable: true
+          });
+        }
+        return res;
+      };
+    })();
+  </script>
+
+  <!--
+    ┌──────────────────────────────────────────────────────────────┐
+    │ # Region [6] — Real-time WebSocket Client & Data Pipeline    │
+    └──────────────────────────────────────────────────────────────┘
+  -->
+  <script>
+    const AppState = {
+      stocksMap: new Map(),
+      indicesMap: {},
+      currentMarket: 'ALL',
+      currentSector: 'ALL',
+      currentMetric: 'traded_value',
+      searchQuery: '',
+      selectedSymbol: null,
+      treemapChart: null,
+      ws: null,
+      reconnectTimer: null
+    };
+    // Bảng màu phẳng chuẩn ban đầu (Vietstock & SSI Original)
+    function getVietstockColor(changePct) {
+      if (typeof changePct !== 'number' || isNaN(changePct)) return '#facc15';
+      if (changePct >= 6.8) return '#a855f7';  // Tăng trần (Tím)
+      if (changePct > 0.0) return '#00c073';   // Tăng giá (Xanh lá)
+      if (changePct === 0.0 || Math.abs(changePct) < 0.0001) return '#facc15'; // Đứng giá (Vàng)
+      if (changePct <= -6.8) return '#06b6d4'; // Giảm sàn (Xanh lơ)
+      return '#ef4444';                        // Giảm giá (Đỏ)
+    }
+
+    // Định dạng % biến động chuẩn Vietstock cố định 2 chữ số thập phân để chống giật chữ
+    function formatPct(pct) {
+      if (typeof pct !== 'number' || isNaN(pct)) return '+0.00%';
+      const rounded = Math.round(pct * 100) / 100;
+      if (rounded === 0 || Math.abs(rounded) < 0.0001) return '+0.00%';
+      const sign = rounded > 0 ? '+' : '';
+      return `${sign}${rounded.toFixed(2)}%`;
+    }
+
+    function isValidStock(item) {
+      if (!item || !item.symbol || typeof item.symbol !== 'string') return false;
+      if (item.symbol.length !== 3) return false;
+      if (!item.sector) return false;
+      if (typeof item.change_pct !== 'number' || isNaN(item.change_pct)) return false;
+      if (item.traded_value > 50000) return false;
+      return true;
+    }
+
+    function initWebSocket() {
+      const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+      const wsUrl = `${protocol}//${window.location.host}/ws`;
+
+      const dotEl = document.getElementById('conn-dot');
+      const textEl = document.getElementById('conn-text');
+
+      try {
+        AppState.ws = new WebSocket(wsUrl);
+
+        AppState.ws.onopen = function() {
+          dotEl.className = 'pulse-dot live';
+          textEl.innerText = 'FASTCONNECT LIVE';
+          if (AppState.reconnectTimer) {
+            clearTimeout(AppState.reconnectTimer);
+            AppState.reconnectTimer = null;
+          }
+        };
+
+        AppState.ws.onmessage = function(event) {
+          try {
+            const msg = JSON.parse(event.data);
+            if (msg.type === 'SNAPSHOT') {
+              handleSnapshot(msg.data, msg.indices);
+            } else if (msg.type === 'TICK') {
+              handleTick(msg.data);
+            } else if (msg.type === 'INDEX_UPDATE') {
+              handleIndexUpdate(msg.data);
+            }
+          } catch (err) {
+            console.error('[WS Message Error]', err);
+          }
+        };
+
+        AppState.ws.onclose = function() {
+          dotEl.className = 'pulse-dot offline';
+          textEl.innerText = 'POLLING LIVE';
+          AppState.reconnectTimer = setTimeout(initWebSocket, 3000);
+        };
+
+        AppState.ws.onerror = function() {
+          AppState.ws.close();
+        };
+      } catch (e) {
+        AppState.reconnectTimer = setTimeout(initWebSocket, 3000);
+      }
+    }
+
+    function handleSnapshot(stocks, indices) {
+      if (Array.isArray(stocks)) {
+        AppState.stocksMap.clear();
+        stocks.forEach(s => {
+          if (isValidStock(s)) {
+            AppState.stocksMap.set(s.symbol, s);
+          }
+        });
+      }
+      if (indices) {
+        handleIndexUpdate(indices);
+      }
+      updateSectorDropdown();
+      renderAll();
+    }
+
+    let _tickRenderTimer = null;
+    function scheduleTreemapRender() {
+      if (_tickRenderTimer) return;
+      // Tổng hợp giao dịch cập nhật Treemap mỗi 1.2s để số liệu nhạy bén và không bị giật
+      _tickRenderTimer = setTimeout(() => {
+        const filtered = getFilteredStocks();
+        renderTreemap(filtered);
+        renderSummaryStats(filtered);
+        _tickRenderTimer = null;
+      }, 1200);
+    }
+
+    function handleTick(stock) {
+      if (!stock || !isValidStock(stock)) {
+        if (stock && stock.symbol && stock.traded_value <= 0.01) {
+          AppState.stocksMap.delete(stock.symbol);
+        }
+        return;
+      }
+      AppState.stocksMap.set(stock.symbol, stock);
+      
+      // Nếu mã đang được soi trong Live Inspector thì cập nhật tức thời
+      if (AppState.selectedSymbol === stock.symbol) {
+        updateDetailBox(stock);
+      }
+
+      scheduleTreemapRender();
+    }
+
+    function handleIndexUpdate(indices) {
+      if (!indices || Object.keys(indices).length === 0) return;
+      AppState.indicesMap = Object.assign({}, AppState.indicesMap, indices);
+      const vn = AppState.indicesMap["VNINDEX"] || AppState.indicesMap["VN-INDEX"] || {};
+      const hnx = AppState.indicesMap["HNXINDEX"] || AppState.indicesMap["HNX-INDEX"] || {};
+      const up = AppState.indicesMap["HNXUPCOMINI"] || AppState.indicesMap["UPCOM-INDEX"] || {};
+
+      renderIndexBlock('vnindex', vn);
+      renderIndexBlock('hnxindex', hnx);
+      renderIndexBlock('upindex', up);
+      renderSummaryStats(getFilteredStocks());
+    }
+
+    function renderIndexBlock(idPrefix, idx) {
+      const valEl = document.getElementById(`${idPrefix}-val`);
+      const chgEl = document.getElementById(`${idPrefix}-chg`);
+      if (!valEl || !chgEl || !idx || !idx.index_value) return;
+
+      const chg = idx.change || 0;
+      const rChg = idx.ratio_change || 0;
+      const colorClass = chg > 0 ? 'c-gain' : (chg < 0 ? 'c-loss' : 'c-ref');
+      const arrow = chg > 0 ? '▲ +' : (chg < 0 ? '▼ ' : '');
+
+      valEl.innerText = idx.index_value.toLocaleString('vi-VN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      valEl.className = colorClass;
+
+      chgEl.innerText = `${arrow}${chg.toFixed(2)} (${rChg >= 0 ? '+' : ''}${rChg.toFixed(2)}%)`;
+      chgEl.className = colorClass;
+    }
+
+    async function fetchInitialRest() {
+      try {
+        const [resHeatmap, resIndices] = await Promise.all([
+          fetch('/api/heatmap'),
+          fetch('/api/indices')
+        ]);
+        if (resHeatmap.ok) {
+          const stocks = await resHeatmap.json();
+          const indices = resIndices.ok ? await resIndices.json() : {};
+          handleSnapshot(stocks, indices);
+        }
+      } catch (err) {
+        console.warn('[Initial REST Fetch Error]', err);
+      }
+    }
+  </script>
+
+  <!--
+    ┌──────────────────────────────────────────────────────────────┐
+    │ # Region [7] — Market UI Controller & Interaction Handlers   │
+    └──────────────────────────────────────────────────────────────┘
+  -->
+  <script>
+    function initTreemap() {
+      const chartDom = document.getElementById('treemap-canvas');
+      AppState.treemapChart = echarts.init(chartDom, 'dark', { renderer: 'canvas' });
+
+      window.addEventListener('resize', () => {
+        if (AppState.treemapChart) AppState.treemapChart.resize();
+        updateToggleBtnIcon();
+      });
+
+      // Theo dõi kích thước right-treemap-area để ECharts tự bung kín màn hình khi ẩn/hiện sidebar
+      if (window.ResizeObserver) {
+        const ro = new ResizeObserver(() => {
+          if (AppState.treemapChart) AppState.treemapChart.resize();
+        });
+        const area = document.querySelector('.right-treemap-area');
+        if (area) ro.observe(area);
+      }
+
+      // Nhấp chuột: Click mã để xem chi tiết / Click ngành để Zoom
+      AppState.treemapChart.on('click', function(params) {
+        if (!params.data) return;
+        if (params.data.symbol) {
+          selectStock(params.data.symbol);
+        } else if (params.data.name && !params.data.symbol) {
+          filterBySector(params.data.name);
+        }
+      });
+
+      // Lia chuột: Cập nhật thông tin chi tiết vào Live Inspector
+      AppState.treemapChart.on('mouseover', function(params) {
+        if (!params.data) return;
+        if (params.data.symbol) {
+          updateDetailBox(params.data);
+          AppState.selectedSymbol = params.data.symbol;
+        }
+      });
+    }
+
+    function updateToggleBtnIcon() {
+      const icon = document.getElementById('sidebar-toggle-icon');
+      const container = document.getElementById('main-container');
+      if (!icon || !container) return;
+
+      if (window.innerWidth <= 1024) {
+        const isOpen = container.classList.contains('sidebar-open');
+        icon.innerText = isOpen ? '✕' : '📊';
+      } else {
+        container.classList.remove('sidebar-open');
+        const isCollapsed = container.classList.contains('sidebar-collapsed');
+        icon.innerText = isCollapsed ? '▶' : '◀';
+      }
+    }
+
+    // Thu gọn / Mở rộng Sidebar (ECharts là TRỌNG TÂM 100%, Cột trái là phụ)
+    function toggleSidebar(forceState) {
+      const container = document.getElementById('main-container');
+      if (!container) return;
+
+      const isMobile = window.innerWidth <= 1024;
+      if (isMobile) {
+        // Nửa màn hình / Tablet / Điện thoại: Sử dụng Drawer đè lên Treemap
+        let isOpen = false;
+        if (typeof forceState === 'boolean') {
+          isOpen = forceState;
+          container.classList.toggle('sidebar-open', isOpen);
+        } else {
+          isOpen = container.classList.toggle('sidebar-open');
+        }
+      } else {
+        // Màn hình lớn Desktop: Ẩn/Hiện cột trái bằng margin-left
+        let isCollapsed = false;
+        if (typeof forceState === 'boolean') {
+          isCollapsed = !forceState;
+          container.classList.toggle('sidebar-collapsed', isCollapsed);
+        } else {
+          isCollapsed = container.classList.toggle('sidebar-collapsed');
+        }
+      }
+
+      updateToggleBtnIcon();
+
+      // Đảm bảo Treemap tự động resize mượt mà trong quá trình trượt
+      let elapsed = 0;
+      const step = 25;
+      const timer = setInterval(() => {
+        if (AppState.treemapChart) {
+          AppState.treemapChart.resize();
+        }
+        elapsed += step;
+        if (elapsed >= 300) {
+          clearInterval(timer);
+          if (AppState.treemapChart) AppState.treemapChart.resize();
+        }
+      }, step);
+    }
+
+    function getFilteredStocks() {
+      const list = [];
+      const query = AppState.searchQuery.trim().toUpperCase();
+
+      for (const s of AppState.stocksMap.values()) {
+        if (!isValidStock(s)) continue;
+        if (AppState.currentMarket !== 'ALL' && s.market !== AppState.currentMarket) continue;
+        if (AppState.currentSector !== 'ALL' && s.sector !== AppState.currentSector) continue;
+        if (query && !s.symbol.includes(query)) continue;
+        list.push(s);
+      }
+
+      list.sort((a, b) => (b.traded_value || 0) - (a.traded_value || 0));
+      return list;
+    }
+
+    function updateSectorDropdown() {
+      const selectEl = document.getElementById('sector-filter');
+      const current = selectEl.value;
+      const sectorValMap = new Map();
+
+      for (const s of AppState.stocksMap.values()) {
+        if (!isValidStock(s) || !s.sector) continue;
+        sectorValMap.set(s.sector, (sectorValMap.get(s.sector) || 0) + (s.traded_value || 0));
+      }
+
+      // Sắp xếp các ngành theo Tổng thanh khoản giảm dần, đảm bảo "Khác" luôn nằm ở đáy cùng
+      const sortedSectors = Array.from(sectorValMap.keys()).sort((a, b) => {
+        if (a === 'Khác') return 1;
+        if (b === 'Khác') return -1;
+        return (sectorValMap.get(b) || 0) - (sectorValMap.get(a) || 0);
+      });
+
+      let html = '<option value="ALL">Tất cả ngành (VS-Sector)</option>';
+      sortedSectors.forEach(sec => {
+        html += `<option value="${sec}">${sec}</option>`;
+      });
+      selectEl.innerHTML = html;
+      if (sortedSectors.includes(current)) selectEl.value = current;
+    }
+
+    function filterBySector(secName) {
+      AppState.currentSector = secName;
+      const selectEl = document.getElementById('sector-filter');
+      if (selectEl) selectEl.value = secName;
+      renderAll();
+    }
+
+    function resetSectorZoom() {
+      AppState.currentSector = 'ALL';
+      const selectEl = document.getElementById('sector-filter');
+      if (selectEl) selectEl.value = 'ALL';
+      renderAll();
+    }
+
+    function renderAll() {
+      const filtered = getFilteredStocks();
+
+      renderSummaryStats(filtered);
+      renderTopSectors(filtered);
+      renderTreemap(filtered);
+
+      document.getElementById('total-stocks-badge').innerText = `${filtered.length} MÃ`;
+      document.getElementById('clock-txt').innerText = new Date().toLocaleTimeString('vi-VN');
+
+      const breadcrumbTb = document.getElementById('breadcrumb-toolbar');
+      const sectorFilterSelect = document.getElementById('sector-filter');
+      const sectorBadge = document.getElementById('header-sector-badge');
+
+      if (AppState.currentSector !== 'ALL') {
+        if (breadcrumbTb) breadcrumbTb.style.display = 'inline-flex';
+        if (sectorFilterSelect) sectorFilterSelect.style.display = 'none';
+        if (sectorBadge) sectorBadge.innerText = AppState.currentSector;
+      } else {
+        if (breadcrumbTb) breadcrumbTb.style.display = 'none';
+        if (sectorFilterSelect) sectorFilterSelect.style.display = 'inline-block';
+      }
+
+      if (AppState.selectedSymbol && AppState.stocksMap.has(AppState.selectedSymbol)) {
+        updateDetailBox(AppState.stocksMap.get(AppState.selectedSymbol));
+      }
+    }
+
+    function renderSummaryStats(stocks) {
+      const vnIdx = AppState.indicesMap["VNINDEX"] || AppState.indicesMap["VN-INDEX"] || {};
+      
+      let totalVal = 0;
+      let totalVol = 0;
+      let up = 0;
+      let down = 0;
+      let ref = 0;
+      let ceil = 0;
+      let floor = 0;
+
+      if (vnIdx && vnIdx.total_value > 0 && (vnIdx.advances > 0 || vnIdx.declines > 0) && AppState.currentMarket === 'ALL' && AppState.currentSector === 'ALL' && !AppState.searchQuery) {
+        totalVal = vnIdx.total_value;
+        totalVol = vnIdx.total_vol;
+        up = vnIdx.advances || 0;
+        down = vnIdx.declines || 0;
+        ref = vnIdx.nochanges || 0;
+        ceil = vnIdx.ceilings || 0;
+        floor = vnIdx.floors || 0;
+      } else {
+        stocks.forEach(s => {
+          totalVal += (s.traded_value || 0);
+          totalVol += (s.traded_vol_mil || 0);
+          if (s.change_pct >= 6.8) ceil++;
+          else if (s.change_pct > 0) up++;
+          else if (s.change_pct <= -6.8) floor++;
+          else if (s.change_pct < 0) down++;
+          else ref++;
+        });
+      }
+
+      document.getElementById('stat-val').innerText = `${totalVal.toLocaleString('vi-VN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} tỷ`;
+      document.getElementById('stat-vol').innerText = `${totalVol.toLocaleString('vi-VN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} tr`;
+      document.getElementById('stat-count').innerText = stocks.length.toLocaleString('vi-VN');
+
+      document.getElementById('stat-up').innerText = up;
+      document.getElementById('stat-down').innerText = down;
+      document.getElementById('stat-ref').innerText = ref;
+      document.getElementById('stat-ceil').innerText = ceil;
+      document.getElementById('stat-floor').innerText = floor;
+
+      document.getElementById('leg-ceil').innerText = ceil;
+      document.getElementById('leg-up').innerText = up;
+      document.getElementById('leg-ref').innerText = ref;
+      document.getElementById('leg-down').innerText = down;
+      document.getElementById('leg-floor').innerText = floor;
+
+      // Cập nhật thanh tỉ lệ độ rộng thị trường (Market Breadth Ratio Bar)
+      const totalBreadth = (up + down + ref) || 1;
+      const pctGain = ((up / totalBreadth) * 100).toFixed(1);
+      const pctRef  = ((ref / totalBreadth) * 100).toFixed(1);
+      const pctLoss = ((down / totalBreadth) * 100).toFixed(1);
+
+      const barGain = document.getElementById('bar-gain');
+      const barRef  = document.getElementById('bar-ref');
+      const barLoss = document.getElementById('bar-loss');
+      if (barGain) barGain.style.width = `${pctGain}%`;
+      if (barRef)  barRef.style.width  = `${pctRef}%`;
+      if (barLoss) barLoss.style.width = `${pctLoss}%`;
+    }
+
+    // Top các nhóm ngành dẫn dắt dòng tiền (Chuẩn Vietstock)
+    function renderTopSectors(stocks) {
+      const secMap = {};
+      stocks.forEach(s => {
+        if (!s.sector || s.sector === 'Khác') return;
+        secMap[s.sector] = (secMap[s.sector] || 0) + (s.traded_value || 0);
+      });
+      const sorted = Object.entries(secMap).sort((a, b) => b[1] - a[1]).slice(0, 6);
+      const totalVal = stocks.reduce((acc, s) => acc + (s.traded_value || 0), 0) || 1;
+
+      const container = document.getElementById('top-sectors-list');
+      if (!container) return;
+
+      let html = '';
+      sorted.forEach(([sec, val]) => {
+        const pct = ((val / totalVal) * 100).toFixed(1);
+        html += `
+          <div class="top-sector-row" onclick="filterBySector('${sec}')" title="Bấm để xem riêng ngành ${sec}">
+            <span class="top-sector-name">${sec}</span>
+            <span class="top-sector-val">${val.toFixed(1)} tỷ <span style="color: var(--text-muted); font-size: 10px;">(${pct}%)</span></span>
+          </div>
+        `;
+      });
+      container.innerHTML = html || '<div style="color:var(--text-muted); font-size:11px; padding:6px 0;">Đang cập nhật...</div>';
+    }
+
+    function renderTreemap(stocks) {
+      if (!AppState.treemapChart) return;
+
+      // Xóa các node nhãn trung gian khi chuyển đổi ngành để hoạt ảnh mượt mà tuyệt đối
+      if (AppState.lastRenderedSector !== AppState.currentSector) {
+        AppState.treemapChart.clear();
+        AppState.lastRenderedSector = AppState.currentSector;
+      }
+
+      const metric = AppState.currentMetric;
+      const sectorGroups = {};
+      const isSingleSector = AppState.currentSector !== 'ALL';
+
+      // Lọc các mã có phát sinh thanh khoản để hiển thị ô trực quan như chuẩn Vietstock
+      const treemapStocks = stocks.filter(s => (s.traded_value || 0) >= 0.02 || (s.traded_vol_mil || 0) > 0.001);
+
+      treemapStocks.forEach(s => {
+        const sec = s.sector || 'Khác';
+        if (!sectorGroups[sec]) sectorGroups[sec] = [];
+        sectorGroups[sec].push(s);
+      });
+
+      const treeData = Object.keys(sectorGroups).map(secName => {
+        const sectorStocks = sectorGroups[secName];
+        // Sắp xếp các mã trong ngành theo giá trị giao dịch giảm dần
+        sectorStocks.sort((a, b) => (b.traded_value || 0) - (a.traded_value || 0));
+
+        const children = sectorStocks.map(s => {
+          const areaVal = Math.max(0.05, s[metric] || 0.05);
+          const pctStr = formatPct(s.change_pct);
+
+          return {
+            name: s.symbol,
+            value: areaVal,
+            symbol: s.symbol,
+            matched_price: s.matched_price,
+            change_pct: s.change_pct,
+            change_pts: s.change_pts,
+            traded_value: s.traded_value,
+            traded_vol_mil: s.traded_vol_mil,
+            sector: secName,
+            itemStyle: {
+              color: getVietstockColor(s.change_pct),
+              borderColor: '#0d0e12',
+              borderWidth: 1.5,
+              borderRadius: 3
+            },
+            emphasis: {
+              itemStyle: {
+                borderColor: '#ffffff',
+                borderWidth: 2,
+                shadowBlur: 8,
+                shadowColor: 'rgba(255, 255, 255, 0.4)'
+              }
+            },
+            label: {
+              show: true,
+              position: 'inside',
+              align: 'center',
+              verticalAlign: 'middle',
+              formatter: '{sym|' + s.symbol + '}\n{pct|' + pctStr + '}',
+              rich: {
+                sym: {
+                  fontSize: 14,
+                  fontWeight: 800,
+                  fontFamily: "'Be Vietnam Pro', -apple-system, sans-serif",
+                  color: '#ffffff',
+                  align: 'center',
+                  lineHeight: 18,
+                  textShadowColor: 'rgba(0,0,0,0.85)',
+                  textShadowBlur: 3
+                },
+                pct: {
+                  fontSize: 11,
+                  fontWeight: 700,
+                  fontFamily: "'Be Vietnam Pro', -apple-system, sans-serif",
+                  color: '#ffffff',
+                  align: 'center',
+                  lineHeight: 14,
+                  textShadowColor: 'rgba(0,0,0,0.85)',
+                  textShadowBlur: 3
+                }
+              }
+            }
+          };
+        });
+
+        const sectorNode = {
+          name: secName,
+          children: children,
+          itemStyle: {
+            color: 'transparent',
+            borderColor: isSingleSector ? 'transparent' : '#242834',
+            borderWidth: isSingleSector ? 0 : 2,
+            gapWidth: isSingleSector ? 1.5 : 3,
+            borderRadius: 4
+          },
+          emphasis: {
+            disabled: true
+          }
+        };
+
+        // Tiêu đề ngành (upperLabel)
+        sectorNode.upperLabel = {
+          show: !isSingleSector,
+          height: 22,
+          color: '#e2e8f0',
+          backgroundColor: '#181b22',
+          fontFamily: "'Be Vietnam Pro', sans-serif",
+          fontSize: 12,
+          fontWeight: 'bold',
+          padding: [3, 8],
+          formatter: '{b}'
+        };
+
+        return sectorNode;
+      });
+
+      const option = {
+        backgroundColor: '#0d0e12',
+        animation: false,
+        animationDuration: 0,
+        animationDurationUpdate: 0,
+        tooltip: {
+          backgroundColor: '#16181d',
+          borderColor: '#2d3139',
+          borderRadius: 2,
+          padding: [8, 12],
+          textStyle: {
+            color: '#ffffff',
+            fontFamily: 'ui-monospace, monospace',
+            fontSize: 12
+          },
+          formatter: function(info) {
+            const d = info.data;
+            if (!d || !d.symbol) return `<b>${info.name}</b>`;
+            const pctStr = formatPct(d.change_pct);
+            const color = getVietstockColor(d.change_pct);
+            return `
+              <div style="font-weight:700; border-bottom:1px solid #2d3139; padding-bottom:4px; margin-bottom:6px;">
+                ${d.symbol} &bull; <span style="color: ${color};">${d.matched_price.toFixed(2)} (${pctStr})</span>
+              </div>
+              <div style="color:#949ba8;">Ngành: <b style="color:#fff;">${d.sector}</b></div>
+              <div style="color:#949ba8;">GTGD: <b style="color:#fff;">${d.traded_value.toFixed(2)} tỷ</b></div>
+              <div style="color:#949ba8;">KLGD: <b style="color:#fff;">${d.traded_vol_mil.toFixed(2)} tr CP</b></div>
+            `;
+          }
+        },
+        series: [{
+          type: 'treemap',
+          data: treeData,
+          roam: false,
+          nodeClick: false,
+          breadcrumb: { show: false },
+          left: 0,
+          top: 0,
+          right: 0,
+          bottom: 0,
+          width: '100%',
+          height: '100%',
+          squareRatio: 0.75,
+          colorMappingBy: 'none',
+          visibleMin: 0,
+          itemStyle: {
+            borderColor: '#0d0e12',
+            borderWidth: 2,
+            gapWidth: 2
+          },
+          levels: [
+            {
+              itemStyle: {
+                borderColor: '#0d0e12',
+                borderWidth: isSingleSector ? 0 : 3,
+                gapWidth: isSingleSector ? 1.5 : 3
+              }
+            },
+            {
+              colorMappingBy: 'none',
+              itemStyle: {
+                color: 'transparent',
+                borderColor: isSingleSector ? 'transparent' : '#242834',
+                borderWidth: isSingleSector ? 0 : 2,
+                gapWidth: isSingleSector ? 1.5 : 3,
+                borderRadius: 4
+              },
+              emphasis: {
+                disabled: true
+              },
+              upperLabel: {
+                show: !isSingleSector,
+                height: 22,
+                color: '#e2e8f0',
+                backgroundColor: '#181b22',
+                fontFamily: "'Be Vietnam Pro', sans-serif",
+                fontSize: 12,
+                fontWeight: 'bold',
+                padding: [3, 8],
+                formatter: '{b}'
+              }
+            },
+            {
+              colorMappingBy: 'none',
+              itemStyle: {
+                borderColor: '#0d0e12',
+                borderWidth: 1.5,
+                gapWidth: 1.5,
+                borderRadius: 3
+              },
+              emphasis: {
+                itemStyle: {
+                  borderColor: '#ffffff',
+                  borderWidth: 2,
+                  shadowBlur: 8,
+                  shadowColor: 'rgba(255, 255, 255, 0.4)'
+                }
+              },
+              upperLabel: {
+                show: false
+              },
+              label: {
+                show: false
+              }
+            }
+          ]
+        }]
+      };
+
+      AppState.treemapChart.setOption(option, true);
+    }
+
+    function selectStock(sym) {
+      AppState.selectedSymbol = sym;
+      const stock = AppState.stocksMap.get(sym);
+      if (stock) {
+        updateDetailBox(stock);
+      }
+    }
+
+    function updateDetailBox(stock) {
+      document.getElementById('det-title').innerText = `CHI TIẾT: ${stock.symbol} (${stock.market || 'HOSE'})`;
+      document.getElementById('det-sector').innerText = stock.sector || '—';
+      document.getElementById('det-price').innerText = stock.matched_price.toFixed(2);
+      
+      const pctEl = document.getElementById('det-change');
+      const colorCls = stock.change_pct >= 6.8 ? 'c-ceil' : (stock.change_pct > 0 ? 'c-gain' : (stock.change_pct <= -6.8 ? 'c-floor' : (stock.change_pct < 0 ? 'c-loss' : 'c-ref')));
+      const pctStr = formatPct(stock.change_pct);
+      pctEl.innerText = `${pctStr} (${stock.change_pts >= 0 ? '+' : ''}${stock.change_pts.toFixed(2)})`;
+      pctEl.className = `val ${colorCls}`;
+
+      document.getElementById('det-ref').innerText = stock.ref_price.toFixed(2);
+      document.getElementById('det-val').innerText = `${stock.traded_value.toFixed(2)} tỷ (${stock.traded_vol_mil.toFixed(2)}M CP)`;
+    }
+
+    function setupEventListeners() {
+      document.querySelectorAll('#market-tabs .tab-btn').forEach(tab => {
+        tab.addEventListener('click', function() {
+          document.querySelectorAll('#market-tabs .tab-btn').forEach(t => t.classList.remove('active'));
+          this.classList.add('active');
+          AppState.currentMarket = this.getAttribute('data-market');
+          document.getElementById('current-scope-lbl').innerText = AppState.currentMarket === 'ALL' ? 'TOÀN SÀN' : `SÀN ${AppState.currentMarket}`;
+          renderAll();
+        });
+      });
+
+      document.getElementById('sector-filter').addEventListener('change', function() {
+        AppState.currentSector = this.value;
+        renderAll();
+      });
+
+      document.querySelectorAll('#metric-tabs .tab-btn').forEach(tab => {
+        tab.addEventListener('click', function() {
+          document.querySelectorAll('#metric-tabs .tab-btn').forEach(t => t.classList.remove('active'));
+          this.classList.add('active');
+          AppState.currentMetric = this.getAttribute('data-metric');
+          renderAll();
+        });
+      });
+
+      document.getElementById('search-symbol').addEventListener('input', function() {
+        AppState.searchQuery = this.value;
+        renderAll();
+      });
+
+      // Lắng nghe phím ESC để đóng Drawer hoặc thoát chế độ zoom ngành
+      window.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+          const container = document.getElementById('main-container');
+          if (container && container.classList.contains('sidebar-open')) {
+            toggleSidebar(false);
+            return;
+          }
+          if (AppState.currentSector !== 'ALL') {
+            resetSectorZoom();
+          } else if (AppState.selectedSymbol) {
+            AppState.selectedSymbol = null;
+          }
+        }
+      });
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      initTreemap();
+      updateToggleBtnIcon();
+      setupEventListeners();
+      fetchInitialRest();
+      initWebSocket();
+      setInterval(() => {
+        if (!AppState.ws || AppState.ws.readyState !== WebSocket.OPEN || AppState.stocksMap.size === 0) {
+          fetchInitialRest();
+        }
+      }, 2500);
+    });
+  </script>
+</body>
+</html>

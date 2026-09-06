@@ -1,0 +1,36 @@
+# ─── SECURITY & SECRETS (NEVER COMMIT) ───
+config.json
+*.pem
+*.key
+*.pfx
+ssi_token_cache.json
+
+# ─── LOCAL CACHE & STORAGE ───
+cache/
+*.cache
+
+# ─── PYTHON COMPILED & RUNTIME ───
+__pycache__/
+*.py[cod]
+*$py.class
+*.log
+
+# ─── VIRTUAL ENVIRONMENTS ───
+.venv/
+venv/
+env/
+ENV/
+
+# ─── OS & EDITORS ───
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+.trigger
