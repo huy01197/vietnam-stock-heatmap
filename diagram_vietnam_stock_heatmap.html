@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="vi" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kiến Trúc Vietnam Stock Real-Time Heatmap</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      background-color: #0a0e17;
+      color: #f3f4f6;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      margin: 0;
+      overflow: hidden;
+    }
+    .diagram-container {
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+      box-sizing: border-box;
+      background: radial-gradient(circle at 50% 40%, #111a2e 0%, #0a0e17 100%);
+    }
+    svg {
+      width: 100%;
+      height: 100%;
+      max-width: 1280px;
+      max-height: 720px;
+      filter: drop-shadow(0 20px 50px rgba(0, 0, 0, 0.8));
+    }
+    .glow-line {
+      stroke-dasharray: 8 4;
+      animation: dash 30s linear infinite;
+    }
+    @keyframes dash {
+      to {
+        stroke-dashoffset: -1000;
+      }
+    }
+    #scale-indicator {
+      position: fixed;
+      bottom: 14px;
+      right: 16px;
+      background: rgba(0, 0, 0, 0.7);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #38bdf8;
+      font-family: monospace;
+      font-size: 12px;
+      padding: 6px 12px;
+      border-radius: 9999px;
+      pointer-events: none;
+      z-index: 100;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="diagram-container">
+    <svg viewBox="0 0 1280 720" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <!-- Gradients -->
+        <linearGradient id="bgGrad" x1="0" y1="0" x2="1280" y2="720" gradientUnits="userSpaceOnUse">
+          <stop stop-color="#111827"/>
+          <stop offset="1" stop-color="#0b1120"/>
+        </linearGradient>
+        <linearGradient id="blueGlow" x1="0" y1="0" x2="1" y2="0">
+          <stop stop-color="#38bdf8"/>
+          <stop offset="1" stop-color="#818cf8"/>
+        </linearGradient>
+        <linearGradient id="emeraldGlow" x1="0" y1="0" x2="1" y2="0">
+          <stop stop-color="#10b981"/>
+          <stop offset="1" stop-color="#34d399"/>
+        </linearGradient>
+        <linearGradient id="amberGlow" x1="0" y1="0" x2="1" y2="0">
+          <stop stop-color="#f59e0b"/>
+          <stop offset="1" stop-color="#fbbf24"/>
+        </linearGradient>
+        <linearGradient id="roseGlow" x1="0" y1="0" x2="1" y2="0">
+          <stop stop-color="#f43f5e"/>
+          <stop offset="1" stop-color="#fb7185"/>
+        </linearGradient>
+        <linearGradient id="indigoGlow" x1="0" y1="0" x2="1" y2="0">
+          <stop stop-color="#6366f1"/>
+          <stop offset="1" stop-color="#818cf8"/>
+        </linearGradient>
+        <linearGradient id="purpleGlow" x1="0" y1="0" x2="1" y2="0">
+          <stop stop-color="#a855f7"/>
+          <stop offset="1" stop-color="#c084fc"/>
+        </linearGradient>
+        <linearGradient id="slateGlow" x1="0" y1="0" x2="1" y2="0">
+          <stop stop-color="#64748b"/>
+          <stop offset="1" stop-color="#94a3b8"/>
+        </linearGradient>
+
+        <!-- Drop Shadow Filters -->
+        <filter id="nodeShadow" x="-10%" y="-10%" width="120%" height="120%">
+          <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#000000" flood-opacity="0.6"/>
+        </filter>
+        <filter id="glowEffect" x="-20%" y="-20%" width="140%" height="140%">
+          <feGaussianBlur stdDeviation="4" result="blur" />
+          <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+        </filter>
+      </defs>
+
+      <!-- Canvas Frame -->
+      <rect x="2" y="2" width="1276" height="716" rx="24" fill="url(#bgGrad)" stroke="#1f2937" stroke-width="1.5"/>
+
+      <!-- Header -->
+      <g transform="translate(60, 48)">
+        <rect width="258.8" height="24" rx="12" fill="#064e3b" fill-opacity="0.6" stroke="#059669" stroke-width="1"/>
+        <text x="129.4" y="16" fill="#34d399" font-size="11" font-weight="700" font-family="system-ui" letter-spacing="1" text-anchor="middle">HỆ THỐNG TRỰC QUAN DÒNG TIỀN</text>
+        <text x="0" y="52" fill="#ffffff" font-size="26" font-weight="800" font-family="system-ui">Kiến Trúc Vietnam Stock Real-Time Heatmap</text>
+        <text x="0" y="74" fill="#9ca3af" font-size="13" font-family="system-ui">Hạ tầng phát sóng dữ liệu SSI SignalR, RAM Store O(1) và Treemap độ trễ dưới 16ms</text>
+      </g>
+
+      <!-- BEZIER DYNAMIC WIRES -->
+<path d="M 270.0 395.0 C 303.3 395.0, 303.3 307.0, 336.7 307.0" stroke="#34d399" stroke-width="1.8" stroke-opacity="0.6" fill="none"  />
+<path d="M 270.0 395.0 C 303.3 395.0, 303.3 483.0, 336.7 483.0" stroke="#38bdf8" stroke-width="1.8" stroke-opacity="0.6" fill="none"  />
+<path d="M 606.7 307.0 C 640.0 307.0, 640.0 306.0, 673.3 306.0" stroke="#34d399" stroke-width="2.5" stroke-opacity="0.85" fill="none" class="glow-line" />
+<path d="M 606.7 483.0 C 640.0 483.0, 640.0 483.0, 673.3 483.0" stroke="#c084fc" stroke-width="2.5" stroke-opacity="0.85" fill="none" class="glow-line" />
+<path d="M 943.3 306.0 C 976.7 306.0, 976.7 332.0, 1010.0 332.0" stroke="#fbbf24" stroke-width="2.5" stroke-opacity="0.85" fill="none"  filter="url(#glowEffect)"/>
+<path d="M 943.3 483.0 C 976.7 483.0, 976.7 458.0, 1010.0 458.0" stroke="#c084fc" stroke-width="2.5" stroke-opacity="0.85" fill="none"  filter="url(#glowEffect)"/>
+
+      <!-- Node: ssi_signalr -->
+<g transform="translate(60.0, 341.0)" filter="url(#nodeShadow)">
+  <rect width="210" height="108" rx="16" fill="#111827" stroke="#0284c7" stroke-width="1.5"/>
+  <rect x="1" y="1" width="208" height="28" rx="14" fill="#1f2937" fill-opacity="0.5"/>
+  <circle cx="16" cy="15" r="3" fill="#38bdf8"/>
+  <text x="24" y="18.5" fill="#38bdf8" font-size="9.5" font-weight="700" font-family="monospace">SIGNALR SOCKET</text>
+  <text x="16" y="52" fill="#ffffff" font-size="14.5" font-weight="700" font-family="system-ui">SSI SignalR DataHub</text>
+  <text x="16" y="73" fill="#9ca3af" font-size="11.5" font-family="system-ui">Dòng khớp lệnh 2,500+ tick/s</text>
+  <text x="16" y="92" fill="#38bdf8" font-size="10.5" font-weight="600" font-family="monospace">HOSE • HNX • UPCoM Live</text>
+</g>
+<!-- Node: stream_hub -->
+<g transform="translate(336.7, 228.0)" filter="url(#nodeShadow)">
+  <rect width="270" height="158" rx="16" fill="#111827" stroke="#059669" stroke-width="1.5"/>
+  <text x="16" y="32" fill="#34d399" font-size="13.5" font-weight="700" font-family="system-ui">Async Stream Hub</text>
+  <rect x="192.4" y="16" width="63.6" height="20" rx="6" fill="#064e3b" stroke="#059669" stroke-width="0.8"/>
+  <text x="224.2" y="30" fill="#34d399" font-size="9.5" font-weight="700" font-family="monospace" text-anchor="middle">AIOHTTP</text>
+  <g transform="translate(14, 48)">
+    <rect width="242" height="28" rx="7" fill="#1f2937" fill-opacity="0.6"/>
+    <text x="10" y="18" fill="#e5e7eb" font-size="10.5" font-weight="600" font-family="system-ui">1. Vòng lặp I/O non-blocking</text>
+  </g>
+  <g transform="translate(14, 82)">
+    <rect width="242" height="28" rx="7" fill="#1f2937" fill-opacity="0.6"/>
+    <text x="10" y="18" fill="#e5e7eb" font-size="10.5" font-weight="600" font-family="system-ui">2. WebSocket Broadcast &lt; 16ms</text>
+  </g>
+  <g transform="translate(14, 116)">
+    <rect width="242" height="28" rx="7" fill="#1f2937" fill-opacity="0.6"/>
+    <text x="10" y="18" fill="#e5e7eb" font-size="10.5" font-weight="600" font-family="system-ui">3. Giải phóng socket tức thì</text>
+  </g>
+</g>
+<!-- Node: memory_store -->
+<g transform="translate(336.7, 404.0)" filter="url(#nodeShadow)">
+  <rect width="270" height="158" rx="16" fill="#111827" stroke="#0284c7" stroke-width="1.5"/>
+  <text x="16" y="32" fill="#38bdf8" font-size="13.5" font-weight="700" font-family="system-ui">In-Memory Store</text>
+  <rect x="165.2" y="16" width="90.8" height="20" rx="6" fill="#082f49" stroke="#0284c7" stroke-width="0.8"/>
+  <text x="210.6" y="30" fill="#38bdf8" font-size="9.5" font-weight="700" font-family="monospace" text-anchor="middle">O(1) LOOKUP</text>
+  <g transform="translate(14, 48)">
+    <rect width="242" height="28" rx="7" fill="#1f2937" fill-opacity="0.6"/>
+    <text x="10" y="18" fill="#e5e7eb" font-size="10.5" font-weight="600" font-family="system-ui">1. Tốc độ truy vấn RAM &lt; 0.12ms</text>
+  </g>
+  <g transform="translate(14, 82)">
+    <rect width="242" height="28" rx="7" fill="#1f2937" fill-opacity="0.6"/>
+    <text x="10" y="18" fill="#e5e7eb" font-size="10.5" font-weight="600" font-family="system-ui">2. Bộ nhớ đệm RAM ~85MB</text>
+  </g>
+  <g transform="translate(14, 116)">
+    <rect width="242" height="28" rx="7" fill="#1f2937" fill-opacity="0.6"/>
+    <text x="10" y="18" fill="#e5e7eb" font-size="10.5" font-weight="600" font-family="system-ui">3. Mức tải vi xử lý CPU &lt; 2.5%</text>
+  </g>
+</g>
+<!-- Node: sector_mapper -->
+<g transform="translate(673.3, 227.0)" filter="url(#nodeShadow)">
+  <rect width="270" height="158" rx="16" fill="#111827" stroke="#d97706" stroke-width="1.5"/>
+  <text x="16" y="32" fill="#fbbf24" font-size="13.5" font-weight="700" font-family="system-ui">Phân Nhóm 15 Ngành</text>
+  <rect x="178.8" y="16" width="77.2" height="20" rx="6" fill="#451a03" stroke="#b45309" stroke-width="0.8"/>
+  <text x="217.4" y="30" fill="#fbbf24" font-size="9.5" font-weight="700" font-family="monospace" text-anchor="middle">VS-SECTOR</text>
+  <g transform="translate(14, 48)">
+    <rect width="242" height="28" rx="7" fill="#1f2937" fill-opacity="0.6"/>
+    <text x="10" y="18" fill="#e5e7eb" font-size="10.5" font-weight="600" font-family="system-ui">1. Phân loại 15 nhóm ngành chính</text>
+  </g>
+  <g transform="translate(14, 82)">
+    <rect width="242" height="28" rx="7" fill="#1f2937" fill-opacity="0.6"/>
+    <text x="10" y="18" fill="#e5e7eb" font-size="10.5" font-weight="600" font-family="system-ui">2. Tính diện tích theo giá trị GD</text>
+  </g>
+  <g transform="translate(14, 116)">
+    <rect width="242" height="28" rx="7" fill="#1f2937" fill-opacity="0.6"/>
+    <text x="10" y="18" fill="#e5e7eb" font-size="10.5" font-weight="600" font-family="system-ui">3. Tổng hợp thanh khoản ngành</text>
+  </g>
+</g>
+<!-- Node: color_engine -->
+<g transform="translate(673.3, 403.0)" filter="url(#nodeShadow)">
+  <rect width="270" height="160" rx="16" fill="#111827" stroke="#7c3aed" stroke-width="1.5"/>
+  <text x="16" y="32" fill="#c084fc" font-size="14" font-weight="700" font-family="system-ui">Chuẩn Màu 5 Trạng Thái</text>
+  <text x="16" y="49" fill="#9ca3af" font-size="10" font-family="monospace">COLOR CODING</text>
+  <g transform="translate(14.0, 58)">
+    <rect width="116.0" height="22" rx="6" fill="#2e1065" stroke="#6d28d9" stroke-width="0.8"/>
+    <text x="58.0" y="15" fill="#c084fc" font-size="9.5" font-weight="700" font-family="system-ui" text-anchor="middle">TRẦN</text>
+  </g>
+  <g transform="translate(140.0, 58)">
+    <rect width="116.0" height="22" rx="6" fill="#064e3b" stroke="#059669" stroke-width="0.8"/>
+    <text x="58.0" y="15" fill="#34d399" font-size="9.5" font-weight="700" font-family="system-ui" text-anchor="middle">TĂNG</text>
+  </g>
+  <g transform="translate(14.0, 86)">
+    <rect width="116.0" height="22" rx="6" fill="#451a03" stroke="#b45309" stroke-width="0.8"/>
+    <text x="58.0" y="15" fill="#fbbf24" font-size="9.5" font-weight="700" font-family="system-ui" text-anchor="middle">THAM CHIẾU</text>
+  </g>
+  <g transform="translate(140.0, 86)">
+    <rect width="116.0" height="22" rx="6" fill="#4c0519" stroke="#be123c" stroke-width="0.8"/>
+    <text x="58.0" y="15" fill="#fb7185" font-size="9.5" font-weight="700" font-family="system-ui" text-anchor="middle">GIẢM</text>
+  </g>
+  <g transform="translate(14, 126)">
+    <rect width="242" height="26" rx="7" fill="#1f2937" stroke="#374151" stroke-width="1"/>
+    <text x="10" y="17" fill="#fbbf24" font-size="9.5" font-weight="700" font-family="monospace">Tự động map Sàn / Giảm kịch biên</text>
+  </g>
+</g>
+<!-- Node: echarts_treemap -->
+<g transform="translate(1010.0, 278.0)" filter="url(#nodeShadow)">
+  <rect width="210" height="108" rx="16" fill="#111827" stroke="#0284c7" stroke-width="1.5"/>
+  <rect x="1" y="1" width="208" height="28" rx="14" fill="#1f2937" fill-opacity="0.5"/>
+  <circle cx="16" cy="15" r="3" fill="#38bdf8"/>
+  <text x="24" y="18.5" fill="#38bdf8" font-size="9.5" font-weight="700" font-family="monospace">60 FPS NEO-DARK</text>
+  <text x="16" y="52" fill="#ffffff" font-size="14.5" font-weight="700" font-family="system-ui">Treemap ECharts UI</text>
+  <text x="16" y="73" fill="#9ca3af" font-size="11.5" font-family="system-ui">Chiếm trọn 100% màn hình</text>
+  <text x="16" y="92" fill="#38bdf8" font-size="10.5" font-weight="600" font-family="monospace">Độ trễ phát sóng &lt; 16ms</text>
+</g>
+<!-- Node: inspector_panel -->
+<g transform="translate(1010.0, 404.0)" filter="url(#nodeShadow)">
+  <rect width="210" height="108" rx="16" fill="#111827" stroke="#059669" stroke-width="1.5"/>
+  <rect x="1" y="1" width="208" height="28" rx="14" fill="#1f2937" fill-opacity="0.5"/>
+  <circle cx="16" cy="15" r="3" fill="#34d399"/>
+  <text x="24" y="18.5" fill="#34d399" font-size="9.5" font-weight="700" font-family="monospace">INTERACTIVE</text>
+  <text x="16" y="52" fill="#ffffff" font-size="14.5" font-weight="700" font-family="system-ui">Bảng Soi Con Trỏ Chuột</text>
+  <text x="16" y="73" fill="#9ca3af" font-size="11.5" font-family="system-ui">Inspector cập nhật tức thời</text>
+  <text x="16" y="92" fill="#34d399" font-size="10.5" font-weight="600" font-family="monospace">Thanh đo độ rộng thị trường</text>
+</g>
+
+      <!-- Footer Branding -->
+      <text x="60" y="682" fill="#4b5563" font-size="11" font-family="monospace">Super AI Layout Engine • Dynamic Bezier Graph Routing • Zero-Wrap Vector Canvas</text>
+    </svg>
+  </div>
+
+  <div id="scale-indicator">Auto-Scaling Vector Canvas</div>
+  <script>
+    function updateScale() {
+      const svg = document.querySelector('svg');
+      if (!svg) return;
+      const rect = svg.getBoundingClientRect();
+      const scale = Math.round((rect.width / 1280) * 100);
+      const ind = document.getElementById('scale-indicator');
+      if (ind) ind.textContent = `Scale: ${scale}% (${Math.round(rect.width)}x${Math.round(rect.height)})`;
+    }
+    window.addEventListener('resize', updateScale);
+    window.addEventListener('DOMContentLoaded', updateScale);
+    updateScale();
+  </script>
+</body>
+</html>

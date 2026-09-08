@@ -1,0 +1,143 @@
+{
+  "title": "Kiến Trúc Vietnam Stock Real-Time Heatmap",
+  "category": "HỆ THỐNG TRỰC QUAN DÒNG TIỀN",
+  "subtitle": "Hạ tầng phát sóng dữ liệu SSI SignalR, RAM Store O(1) và Treemap độ trễ dưới 16ms",
+  "columns": [
+    {
+      "id": "col_feed",
+      "nodes": [
+        {
+          "id": "ssi_signalr",
+          "title": "SSI SignalR DataHub",
+          "badge": "SIGNALR SOCKET",
+          "subtitle": "Dòng khớp lệnh 2,500+ tick/s",
+          "meta": "HOSE • HNX • UPCoM Live",
+          "color": "sky",
+          "width": 210,
+          "height": 108
+        }
+      ]
+    },
+    {
+      "id": "col_hub",
+      "nodes": [
+        {
+          "id": "stream_hub",
+          "title": "Async Stream Hub",
+          "badge": "AIOHTTP",
+          "color": "emerald",
+          "width": 270,
+          "items": [
+            "1. Vòng lặp I/O non-blocking",
+            "2. WebSocket Broadcast < 16ms",
+            "3. Giải phóng socket tức thì"
+          ]
+        },
+        {
+          "id": "memory_store",
+          "title": "In-Memory Store",
+          "badge": "O(1) LOOKUP",
+          "color": "sky",
+          "width": 270,
+          "items": [
+            "1. Tốc độ truy vấn RAM < 0.12ms",
+            "2. Bộ nhớ đệm RAM ~85MB",
+            "3. Mức tải vi xử lý CPU < 2.5%"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "col_engine",
+      "nodes": [
+        {
+          "id": "sector_mapper",
+          "title": "Phân Nhóm 15 Ngành",
+          "badge": "VS-SECTOR",
+          "color": "amber",
+          "width": 270,
+          "items": [
+            "1. Phân loại 15 nhóm ngành chính",
+            "2. Tính diện tích theo giá trị GD",
+            "3. Tổng hợp thanh khoản ngành"
+          ]
+        },
+        {
+          "id": "color_engine",
+          "title": "Chuẩn Màu 5 Trạng Thái",
+          "badge": "COLOR CODING",
+          "color": "purple",
+          "width": 270,
+          "custom_badges": [
+            {"label": "TRẦN", "color": "purple"},
+            {"label": "TĂNG", "color": "emerald"},
+            {"label": "THAM CHIẾU", "color": "amber"},
+            {"label": "GIẢM", "color": "rose"}
+          ],
+          "bottom_box": "Tự động map Sàn / Giảm kịch biên"
+        }
+      ]
+    },
+    {
+      "id": "col_ui",
+      "nodes": [
+        {
+          "id": "echarts_treemap",
+          "title": "Treemap ECharts UI",
+          "badge": "60 FPS NEO-DARK",
+          "subtitle": "Chiếm trọn 100% màn hình",
+          "meta": "Độ trễ phát sóng < 16ms",
+          "color": "sky",
+          "width": 210,
+          "height": 108
+        },
+        {
+          "id": "inspector_panel",
+          "title": "Bảng Soi Con Trỏ Chuột",
+          "badge": "INTERACTIVE",
+          "subtitle": "Inspector cập nhật tức thời",
+          "meta": "Thanh đo độ rộng thị trường",
+          "color": "emerald",
+          "width": 210,
+          "height": 108
+        }
+      ]
+    }
+  ],
+  "connections": [
+    {
+      "from": "ssi_signalr",
+      "to": "stream_hub",
+      "color": "emerald"
+    },
+    {
+      "from": "ssi_signalr",
+      "to": "memory_store",
+      "color": "sky"
+    },
+    {
+      "from": "stream_hub",
+      "to": "sector_mapper",
+      "color": "emerald",
+      "animated": true
+    },
+    {
+      "from": "memory_store",
+      "to": "color_engine",
+      "color": "purple",
+      "animated": true
+    },
+    {
+      "from": "sector_mapper",
+      "to": "echarts_treemap",
+      "color": "amber",
+      "glow": true
+    },
+    {
+      "from": "color_engine",
+      "to": "inspector_panel",
+      "color": "purple",
+      "glow": true
+    }
+  ]
+}

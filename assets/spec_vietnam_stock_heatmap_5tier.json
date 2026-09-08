@@ -1,0 +1,204 @@
+{
+  "title": "Kiến Trúc Toàn Trình Vietnam Stock Real-Time Heatmap",
+  "category": "HẠ TẦNG XỬ LÝ DÒNG TIỀN VẬN HÀNH THỰC TẾ",
+  "subtitle": "Quy trình xác thực RSA, luồng SignalR 2,500+ tick/s, In-Memory RAM Store O(1) và Treemap ECharts",
+  "columns": [
+    {
+      "id": "col_auth",
+      "nodes": [
+        {
+          "id": "ssi_vault",
+          "title": "SSI Security Vault",
+          "badge": "RSA KEY",
+          "color": "purple",
+          "width": 210,
+          "items": [
+            "1. Đọc khóa config.json",
+            "2. Ký số RSA PrivateKey",
+            "3. Cấp & gia hạn Token"
+          ]
+        },
+        {
+          "id": "sliding_fetcher",
+          "title": "Sliding Fetcher",
+          "badge": "10-DAY WIN",
+          "color": "sky",
+          "width": 210,
+          "items": [
+            "1. Quét lùi 10 ngày nghỉ",
+            "2. Snapshot chỉ số & giá",
+            "3. Dự phòng VNDirect finfo"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "col_stream",
+      "nodes": [
+        {
+          "id": "signalr_worker",
+          "title": "SignalR Connector",
+          "badge": "WORKER",
+          "color": "sky",
+          "width": 210,
+          "items": [
+            "1. Lắng nghe kênh X:ALL",
+            "2. Lắng nghe kênh MI:ALL",
+            "3. Tự reconnect khi rớt"
+          ]
+        },
+        {
+          "id": "packet_parser",
+          "title": "Packet Parser",
+          "badge": "DECODE",
+          "color": "emerald",
+          "width": 210,
+          "items": [
+            "1. Giải mã gói tin X và M",
+            "2. Tính % giá tham chiếu",
+            "3. Ghi đè vào RAM Store"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "col_state",
+      "nodes": [
+        {
+          "id": "ram_store",
+          "title": "In-Memory Store",
+          "badge": "O(1) MUTEX",
+          "color": "sky",
+          "width": 210,
+          "items": [
+            "1. Hash-Map 700+ mã CP",
+            "2. Thread-Safe Mutex Lock",
+            "3. Truy xuất < 0.12ms"
+          ]
+        },
+        {
+          "id": "sector_classifier",
+          "title": "Phân Loại Ngành",
+          "badge": "VS-SECTOR",
+          "color": "amber",
+          "width": 210,
+          "items": [
+            "1. Chuẩn hóa 15 nhóm ngành",
+            "2. Xếp theo thanh khoản",
+            "3. Gom nhóm Khác ở đáy"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "col_server",
+      "nodes": [
+        {
+          "id": "aiohttp_server",
+          "title": "Máy Chủ aiohttp",
+          "badge": "PORT 8050",
+          "color": "emerald",
+          "width": 210,
+          "items": [
+            "1. 1-Click Port Scrubber",
+            "2. Thoát SIGINT 0.05s",
+            "3. Cung cấp REST APIs"
+          ]
+        },
+        {
+          "id": "dual_dispatcher",
+          "title": "Bộ Điều Phối Kép",
+          "badge": "FAILOVER",
+          "color": "purple",
+          "width": 210,
+          "items": [
+            "1. FASTCONNECT WebSocket",
+            "2. POLLING LIVE 2.5s",
+            "3. Snapshot 0ms Cold-Start"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "col_ui",
+      "nodes": [
+        {
+          "id": "echarts_treemap",
+          "title": "Treemap ECharts",
+          "badge": "100% FOCUS",
+          "color": "sky",
+          "width": 210,
+          "items": [
+            "1. ZRender Centroid Hook",
+            "2. Ẩn chữ ô nhỏ < 38px",
+            "3. Hiệu ứng chớp Flash"
+          ]
+        },
+        {
+          "id": "responsive_drawer",
+          "title": "Responsive Drawer",
+          "badge": "INSPECTOR",
+          "color": "amber",
+          "width": 210,
+          "items": [
+            "1. Thanh độ rộng 3 màu",
+            "2. Top 6 ngành dòng tiền",
+            "3. Bảng soi con trỏ chuột"
+          ]
+        }
+      ]
+    }
+  ],
+  "connections": [
+    {
+      "from": "ssi_vault",
+      "to": "signalr_worker",
+      "color": "purple",
+      "animated": true
+    },
+    {
+      "from": "sliding_fetcher",
+      "to": "packet_parser",
+      "color": "sky",
+      "animated": false
+    },
+    {
+      "from": "signalr_worker",
+      "to": "ram_store",
+      "color": "sky",
+      "animated": true,
+      "glow": true
+    },
+    {
+      "from": "packet_parser",
+      "to": "sector_classifier",
+      "color": "emerald",
+      "animated": true
+    },
+    {
+      "from": "ram_store",
+      "to": "aiohttp_server",
+      "color": "sky",
+      "animated": true
+    },
+    {
+      "from": "sector_classifier",
+      "to": "dual_dispatcher",
+      "color": "amber",
+      "animated": false
+    },
+    {
+      "from": "aiohttp_server",
+      "to": "echarts_treemap",
+      "color": "emerald",
+      "animated": true,
+      "glow": true
+    },
+    {
+      "from": "dual_dispatcher",
+      "to": "responsive_drawer",
+      "color": "purple",
+      "animated": true
+    }
+  ]
+}

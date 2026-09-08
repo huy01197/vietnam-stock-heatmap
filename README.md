@@ -21,10 +21,10 @@
 
 ### 2. Sơ Đồ Kiến Trúc Hệ Thống 5 Tầng
 
-![Sơ đồ kiến trúc hệ thống Bản đồ nhiệt](Branch/Heatmap_Dark_1280x640.jpg)
+![Sơ đồ kiến trúc hệ thống Bản đồ nhiệt](Branch/Heatmap_Architecture_1280x720.png)
 
-> **Tài liệu phân tích kiến trúc chuyên sâu:** [**SYSTEM_OVERVIEW.md**](Branch/SYSTEM_OVERVIEW.md) | [**SYSTEM_OVERVIEW.docx**](Branch/SYSTEM_OVERVIEW.docx)  
-> *(Bao gồm chi tiết 5 tầng công nghệ, cơ chế giải phóng socket 1-Click Restart, luồng SignalR SSI độ trễ < 16ms và ma trận điều phối tệp tin).*
+> **Sơ đồ kiến trúc tương tác vector (SVG/HTML):** [**diagram_vietnam_stock_heatmap_5tier.html**](diagram_vietnam_stock_heatmap_5tier.html) | [Bản thu gọn (4 tầng)](diagram_vietnam_stock_heatmap.html) | [**SYSTEM_OVERVIEW.md**](Branch/SYSTEM_OVERVIEW.md)  
+> *(Bao gồm chi tiết luồng SignalR SSI độ trễ < 16ms, In-Memory Store O(1), bảng màu 5 cấp và Treemap ECharts).*
 
 ---
 
