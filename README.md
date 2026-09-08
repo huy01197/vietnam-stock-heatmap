@@ -1,38 +1,38 @@
-# Vietnam Stock Market Real-Time Heatmap
-### Hệ Thống Trực Quan Hóa Dòng Tiền & Bản Đồ Nhiệt Thị Trường Chứng Khoán Thời Gian Thực (< 16ms)
+# Bản Đồ Nhiệt Thị Trường Chứng Khoán Việt Nam Thời Gian Thực
+### Hệ Thống Trực Quan Hóa Dòng Tiền & Biến Động Thị Trường Chứng Khoán (< 16ms)
 
-[![Python Version](https://img.shields.io/badge/Python-3.10%2B-blue.svg?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
-[![Web Framework](https://img.shields.io/badge/aiohttp-3.9%2B-green.svg?style=for-the-badge&logo=aiohttp&logoColor=white)](https://docs.aiohttp.org/)
-[![Visualization](https://img.shields.io/badge/Apache_ECharts-5.4-red.svg?style=for-the-badge&logo=apacheecharts&logoColor=white)](https://echarts.apache.org/)
-[![Stream Engine](https://img.shields.io/badge/SSI_FastConnect-SignalR-orange.svg?style=for-the-badge&logo=fastapi&logoColor=white)](https://fc-data.ssi.com.vn/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
+[![Phiên bản Python](https://img.shields.io/badge/Python-3.10%2B-blue.svg?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
+[![Khung máy chủ Web](https://img.shields.io/badge/aiohttp-3.9%2B-green.svg?style=for-the-badge&logo=aiohttp&logoColor=white)](https://docs.aiohttp.org/)
+[![Thư viện trực quan hóa](https://img.shields.io/badge/Apache_ECharts-5.4-red.svg?style=for-the-badge&logo=apacheecharts&logoColor=white)](https://echarts.apache.org/)
+[![Công cụ luồng dữ liệu](https://img.shields.io/badge/SSI_FastConnect-SignalR-orange.svg?style=for-the-badge&logo=fastapi&logoColor=white)](https://fc-data.ssi.com.vn/)
+[![Giấy phép: MIT](https://img.shields.io/badge/Gi%E1%BA%A5y_ph%C3%A9p-MIT-yellow.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
 
-> **Vietnam Stock Heatmap** là nền tảng trực quan hóa dòng tiền và biến động giá cổ phiếu thời gian thực được thiết kế theo phong cách **Finviz** và ngôn ngữ đồ họa **Bauhaus & Neo-Dark**. Hệ thống kết nối trực tiếp dòng dữ liệu khớp lệnh sống từ các sàn giao dịch **HOSE, HNX, UPCoM** thông qua hạ tầng **SSI FastConnect SignalR DataHub**, lưu trữ trạng thái tại **In-Memory RAM Store** với độ trễ microsecond ($O(1)$) và phát sóng dữ liệu trực tiếp tới trình duyệt web.
+> **Bản Đồ Nhiệt Chứng Khoán Việt Nam** (Vietnam Stock Heatmap) là nền tảng trực quan hóa dòng tiền và biến động giá cổ phiếu thời gian thực theo chuẩn phong cách **Finviz** và ngôn ngữ đồ họa **Bauhaus & Neo-Dark**. Hệ thống kết nối trực tiếp dòng dữ liệu khớp lệnh sống từ các sàn giao dịch **HOSE, HNX, UPCoM** thông qua hạ tầng **SSI FastConnect SignalR DataHub**, lưu trữ trạng thái tại bộ nhớ đệm **In-Memory RAM Store** với độ trễ microsecond ($O(1)$) và phát sóng dữ liệu trực tiếp tới trình duyệt web.
 
 ---
 
-## Tổng Quan Trực Quan (Visual Showcase)
+## Trực Quan Hóa Giao Diện & Kiến Trúc
 
-### 1. Bản Đồ Nhiệt Thị Trường Thực Tế (Live Market Heatmap Interface)
+### 1. Giao Diện Bản Đồ Nhiệt Thực Tế
 
-![Vietnam Stock Market Heatmap Interface](Branch/Heatmap_Interface_Preview.png)
+![Giao diện Bản đồ nhiệt chứng khoán Việt Nam](Branch/Heatmap_Interface_Preview.png)
 
-*Giao diện Neo-Dark chuẩn Institutional Financial Terminal: 15 nhóm ngành VS-Sector, Treemap trọng tâm 100%, tỷ lệ dòng tiền theo quy mô ô, thanh độ rộng thị trường và Live Inspector theo con trỏ chuột.*
+*Giao diện Neo-Dark chuẩn màn hình tài chính chuyên nghiệp: 15 nhóm ngành VS-Sector, Treemap chiếm trọn 100% tầm nhìn, quy mô ô theo giá trị giao dịch, thanh tỷ lệ độ rộng thị trường và bảng soi chi tiết theo con trỏ chuột.*
 
-### 2. Sơ Đồ Kiến Trúc Hệ Thống 5 Tầng (System Architecture Blueprint)
+### 2. Sơ Đồ Kiến Trúc Hệ Thống 5 Tầng
 
-![Vietnam Stock Heatmap Architecture](Branch/Heatmap_Dark_1280x640.jpg)
+![Sơ đồ kiến trúc hệ thống Bản đồ nhiệt](Branch/Heatmap_Dark_1280x640.jpg)
 
 > **Tài liệu phân tích kiến trúc chuyên sâu:** [**SYSTEM_OVERVIEW.md**](Branch/SYSTEM_OVERVIEW.md) | [**SYSTEM_OVERVIEW.docx**](Branch/SYSTEM_OVERVIEW.docx)  
 > *(Bao gồm chi tiết 5 tầng công nghệ, cơ chế giải phóng socket 1-Click Restart, luồng SignalR SSI độ trễ < 16ms và ma trận điều phối tệp tin).*
 
 ---
 
-## Đo Lường Hiệu Năng Hệ Thống (Performance Benchmarks)
+## Đo Lường Hiệu Năng Vận Hành Hệ Thống
 
 Hệ thống được thiết kế tối ưu hóa độ trễ ở từng khâu xử lý:
 
-| Chỉ tiêu kỹ thuật (Metric) | Kết quả đo đạc (Measured) | Chuẩn mục tiêu | Ghi chú kiến trúc |
+| Chỉ tiêu kỹ thuật | Kết quả đo đạc thực tế | Tiêu chuẩn mục tiêu | Đánh giá kiến trúc |
 | :--- | :---: | :---: | :--- |
 | Tốc độ truy vấn RAM Store | < 0.12 ms | < 1.00 ms | Cấu trúc Hash-Map In-Memory truy xuất $O(1)$ |
 | Độ trễ luồng SSI SignalR -> WebSocket | ~12 - 16 ms | < 16.6 ms | Chuẩn 60 FPS, không gây giật lag giao diện |
@@ -44,25 +44,25 @@ Hệ thống được thiết kế tối ưu hóa độ trễ ở từng khâu x
 
 ---
 
-## Quy Chuẩn Bảng Màu & Ngữ Nghĩa Tài Chính (Design System Tokens)
+## Quy Chuẩn Bảng Màu & Ngữ Nghĩa Tài Chính
 
 Hệ thống tuân thủ bảng màu 5 cấp độ chuẩn Vietstock & TradingView, cân bằng độ tương phản thị giác trong không gian làm việc Neo-Dark:
 
 | Trạng thái biến động | Mã màu (HEX) | Điều kiện kích hoạt | Ngữ nghĩa nghiệp vụ tài chính |
 | :--- | :---: | :--- | :--- |
-| Giá Trần (Ceiling) | `#a855f7` | `price == ceil` hoặc `change_pct >= +6.8%` | Cổ phiếu tăng kịch biên độ trần cho phép |
-| Tăng giá (Advance) | `#00c073` | `change_pct > 0.00%` | Giá khớp lệnh cao hơn mức giá tham chiếu |
-| Tham chiếu (Unchanged) | `#facc15` | `change_pct == 0.00%` | Thị trường cân bằng, giá bằng tham chiếu ngày |
-| Giảm giá (Decline) | `#ef4444` | `change_pct < 0.00%` | Giá khớp lệnh thấp hơn mức giá tham chiếu |
-| Giá Sàn (Floor) | `#06b6d4` | `price == floor` hoặc `change_pct <= -6.8%` | Cổ phiếu giảm kịch biên độ sàn cho phép |
+| Giá trần | `#a855f7` | `price == ceil` hoặc `change_pct >= +6.8%` | Cổ phiếu tăng kịch biên độ trần cho phép |
+| Tăng giá | `#00c073` | `change_pct > 0.00%` | Giá khớp lệnh cao hơn mức giá tham chiếu |
+| Tham chiếu / Đứng giá | `#facc15` | `change_pct == 0.00%` | Thị trường cân bằng, giá bằng tham chiếu ngày |
+| Giảm giá | `#ef4444` | `change_pct < 0.00%` | Giá khớp lệnh thấp hơn mức giá tham chiếu |
+| Giá sàn | `#06b6d4` | `price == floor` hoặc `change_pct <= -6.8%` | Cổ phiếu giảm kịch biên độ sàn cho phép |
 
 ---
 
-## Phân Loại 15 Nhóm Ngành Chuẩn VS-Sector (Taxonomy Matrix)
+## Phân Loại 15 Nhóm Ngành Chuẩn VS-Sector
 
 Toàn bộ 700+ mã cổ phiếu được phân nhóm tự động vào 15 ngành tài chính chính thống:
 
-| STT | Nhóm ngành (Sector Name) | Mã cổ phiếu tiêu biểu | Phạm vi sàn niêm yết |
+| STT | Nhóm ngành | Mã cổ phiếu tiêu biểu | Phạm vi niêm yết |
 | :---: | :--- | :--- | :--- |
 | 01 | Ngân hàng | VCB, BID, CTG, TCB, VPB, MBB, ACB, STB, HDB, LPB | HOSE, HNX |
 | 02 | Bất động sản | VIC, VHM, VRE, NVL, KDH, NLG, PDR, DIG, DXG, CEO | HOSE, HNX, UPCoM |
@@ -82,24 +82,24 @@ Toàn bộ 700+ mã cổ phiếu được phân nhóm tự động vào 15 ngàn
 
 ---
 
-## Cơ Chế Đáp Ứng Giao Diện Đa Thiết Bị (Responsive Viewport Behavior)
+## Cơ Chế Tương Thích Giao Diện Đa Thiết Bị
 
 Giao diện áp dụng triết lý ECharts-First: Treemap luôn là trọng tâm trung tâm và không bao giờ bị che khuất hoặc co cụm.
 
-| Tiêu chí tương tác | Màn hình lớn (Desktop > 1024px) | Nửa màn hình / Tablet (641px - 1024px) | Điện thoại (Mobile <= 640px) |
+| Tiêu chí hiển thị | Màn hình máy tính (> 1024px) | Nửa màn hình / Máy tính bảng (641px - 1024px) | Màn hình điện thoại (<= 640px) |
 | :--- | :--- | :--- | :--- |
 | Khung Treemap chính | 100% không gian làm việc | 100% chiều rộng & chiều cao | 100% chiều rộng & chiều cao |
-| Bảng chỉ số (Sidebar) | Cố định 260px (nút Toggle thu gọn về 0px) | Chuyển thành Off-canvas Drawer có backdrop mờ | Off-canvas Drawer trượt toàn chiều ngang |
-| Nút kích hoạt Bảng chỉ số | Nút Toggle `[ ◀ Bảng chỉ số ]` | Nút `[ Bảng chỉ số ]` trên thanh điều hướng | Nút `[ Bảng chỉ số ]` trên thanh điều hướng |
-| Cơ chế đóng ngăn kéo | Bấm Toggle mở lại 260px | Bấm nút đóng, bấm vùng backdrop, hoặc phím Esc | Bấm nút đóng hoặc bấm vùng backdrop |
+| Bảng chỉ số (Cột trái) | Cố định 260px (nút chuyển đổi thu gọn về 0px) | Chuyển thành ngăn kéo trượt (Drawer) có lớp nền mờ | Ngăn kéo trượt toàn chiều ngang |
+| Nút kích hoạt Bảng chỉ số | Nút chuyển đổi `[ ◀ Bảng chỉ số ]` | Nút `[ Bảng chỉ số ]` trên thanh điều hướng | Nút `[ Bảng chỉ số ]` trên thanh điều hướng |
+| Cơ chế đóng ngăn kéo | Bấm chuyển đổi mở lại 260px | Bấm nút đóng, bấm vùng nền mờ, hoặc phím Esc | Bấm nút đóng hoặc bấm vùng nền mờ |
 | Nhãn khối Treemap | Căn giữa trọng tâm hình học (ZRender hook) | Tự động ẩn nhãn ô diện tích < 38px | Ưu tiên nhãn cho cổ phiếu thanh khoản lớn |
-| Live Inspector | Cập nhật tức thời theo con trỏ chuột | Cập nhật khi chạm vào từng ô cổ phiếu | Hiển thị dạng thẻ chi tiết khi chạm |
+| Bảng soi chi tiết (Inspector) | Cập nhật tức thời theo con trỏ chuột | Cập nhật khi chạm vào từng ô cổ phiếu | Hiển thị dạng thẻ chi tiết khi chạm |
 
 ---
 
-## Cấu Trúc Dữ Liệu Giao Tiếp (Wire Protocol & Data Schemas)
+## Cấu Trúc Gói Tin Dữ Liệu
 
-### 1. WebSocket TICK Packet (Khớp lệnh thời gian thực)
+### 1. Gói tin khớp lệnh thời gian thực (WebSocket TICK)
 ```json
 {
   "type": "TICK",
@@ -119,7 +119,7 @@ Giao diện áp dụng triết lý ECharts-First: Treemap luôn là trọng tâm
 }
 ```
 
-### 2. WebSocket INDEX_UPDATE Packet (Chỉ số & độ rộng sàn)
+### 2. Gói tin chỉ số và độ rộng thị trường (WebSocket INDEX_UPDATE)
 ```json
 {
   "type": "INDEX_UPDATE",
@@ -138,7 +138,7 @@ Giao diện áp dụng triết lý ECharts-First: Treemap luôn là trọng tâm
 }
 ```
 
-### 3. REST API Snapshot (`GET /api/heatmap?market=HOSE&sector=Ngân%20hàng`)
+### 3. Ảnh chụp nhanh dữ liệu REST API (/api/heatmap)
 ```json
 [
   {
@@ -159,71 +159,71 @@ Giao diện áp dụng triết lý ECharts-First: Treemap luôn là trọng tâm
 
 ---
 
-## Kiến Trúc Luồng Dữ Liệu (Architecture Flow)
+## Sơ Đồ Luồng Dữ Liệu Hệ Thống
 
 ```mermaid
 flowchart TD
     subgraph S1 ["1. NGUỒN CẤP DỮ LIỆU GỐC & XÁC THỰC"]
-        A1["config.json (RSA Key & API Secret)"]
+        A1["config.json (Khóa RSA & Mã bí mật API)"]
         A2["SSI FastConnect REST API"]
         A3["SSI DataHub SignalR (X:ALL, MI:ALL)"]
-        A4["External / VNDirect Finfo (15 Ngành)"]
+        A4["Nguồn ngoài / VNDirect Finfo (15 Nhóm Ngành)"]
     end
 
     subgraph S2 ["2. DỊCH VỤ DỮ LIỆU & BẢO MẬT (market_service.py)"]
-        B1["FastConnect Vault (Quản lý Token Cache)"]
-        B2["Dynamic Sector Processor (15 Nhóm Ngành)"]
-        B3["Snapshot & Fallback Fetcher (Lùi ngày nghỉ lễ)"]
+        B1["FastConnect Vault (Quản lý Bộ Nhớ Đệm Token)"]
+        B2["Bộ Xử Lý Phân Ngành Động (15 Nhóm Ngành)"]
+        B3["Bộ Thu Thập Dữ Liệu Khởi Tạo & Dự Phòng"]
     end
 
-    subgraph S3 ["3. STREAMING & IN-MEMORY RAM STORE (stream_hub.py)"]
-        C1["SignalR Connector Client"]
-        C2["IN-MEMORY RAM STORE (700+ Stocks, Thread-Safe)"]
-        C3["WebSocket Broadcaster Hub"]
+    subgraph S3 ["3. LUỒNG DỮ LIỆU SỐNG & BỘ NHỚ RAM (stream_hub.py)"]
+        C1["Bộ Kết Nối SignalR"]
+        C2["BỘ NHỚ RAM TRONG (700+ Cổ Phiếu, Đa Luồng An Toàn)"]
+        C3["Trung Tâm Phát Sóng WebSocket"]
     end
 
     subgraph S4 ["4. TẦNG MÁY CHỦ WEB (app.py :8050)"]
         D1["HTTP REST APIs (/api/heatmap, /api/indices)"]
-        D2["Route /ws (Two-Way WebSocket)"]
-        D3["Auto-Restart & Port Cleaner"]
+        D2["Đường Dẫn WebSocket (/ws)"]
+        D3["Tự Động Tái Khởi Động & Dọn Cổng"]
     end
 
-    subgraph S5 ["5. GIAO DIỆN CLIENT SPA (bauhaus-ui.html)"]
-        E1["MAIN CANVAS: ECharts Treemap 100%"]
-        E2["Responsive Drawer (3 Chỉ số sàn & Top dòng tiền)"]
+    subgraph S5 ["5. GIAO DIỆN NGƯỜI DÙNG CLIENT (bauhaus-ui.html)"]
+        E1["KHUNG NHÌN CHÍNH: ECharts Treemap 100%"]
+        E2["Ngăn Kéo Trượt (3 Chỉ Số Sàn & Dòng Tiền Hàng Đầu)"]
     end
 
     A1 & A2 --> B1 & B3
     A4 --> B2
-    B1 & B2 & B3 -->|Snapshot Data| C2
-    A3 -->|Tick sống X & MI| C1
+    B1 & B2 & B3 -->|Dữ liệu ảnh chụp nhanh| C2
+    A3 -->|Tick khớp lệnh sống X & MI| C1
     C1 --> C2
     C2 --> C3
     C3 --> D2
     C2 --> D1
-    D1 -->|0ms Initial Boot| E1 & E2
-    D2 -->|Tick Realtime < 16ms| E1 & E2
+    D1 -->|Khởi động tức thì 0ms| E1 & E2
+    D2 -->|Tick thời gian thực < 16ms| E1 & E2
 ```
 
 ---
 
-## Cấu Trúc Mã Nguồn (Project Structure)
+## Cấu Trúc Mã Nguồn Dự Án
 
 ```
 Heatmap Stocks/
 │
-├── app.py                          # Máy chủ aiohttp, REST APIs, WebSocket Hub & 1-Click Play Restart
-├── stream_hub.py                   # SignalR Streaming Hub & In-Memory RAM Store (MarketStateStore)
-├── market_service.py               # Dịch vụ dữ liệu SSI, Vault quản lý Token, Phân loại 15 ngành
-├── bauhaus-ui.html                 # Giao diện SPA Single-File: Treemap ECharts + Responsive Drawer
-├── config.example.json             # File mẫu cấu hình API (an toàn cho Open Source)
+├── app.py                          # Máy chủ aiohttp, REST APIs, WebSocket Hub & Tái khởi động tức thời
+├── stream_hub.py                   # Luồng SignalR & Bộ nhớ đệm RAM Store (MarketStateStore)
+├── market_service.py               # Dịch vụ dữ liệu SSI, Quản lý Token, Phân loại 15 nhóm ngành
+├── bauhaus-ui.html                 # Giao diện SPA Single-File: Treemap ECharts + Ngăn kéo phụ trợ
+├── config.example.json             # Tệp mẫu cấu hình API (an toàn cho mã nguồn mở)
 ├── requirements.txt                # Danh sách thư viện phụ thuộc của dự án
-├── .gitignore                      # Bảo vệ tuyệt đối thông tin nhạy cảm (config.json, cache/)
+├── .gitignore                      # Bảo vệ thông tin nhạy cảm (config.json, cache/)
 ├── assets/                         # Định dạng CSS / hiệu ứng bổ trợ cho giao diện
 │   ├── bauhaus.css
 │   ├── animations.css
 │   └── custom_animation.js
-├── cache/                          # Bộ nhớ đệm cục bộ (tự động tạo, lưu SSI Token)
+├── cache/                          # Bộ nhớ đệm cục bộ (tự động tạo, lưu Token SSI)
 │
 └── Branch/                         # THƯ MỤC TÀI LIỆU KIẾN TRÚC & TÀI NGUYÊN HÌNH ẢNH
     ├── Heatmap_Interface_Preview.png   # Ảnh chụp giao diện thực tế (Live UI Preview)
@@ -237,13 +237,13 @@ Heatmap Stocks/
 
 ---
 
-## Hướng Dẫn Cài Đặt & Khởi Chạy (Quick Start)
+## Hướng Dẫn Cài Đặt & Khởi Chạy
 
-### 1. Yêu cầu hệ thống (Prerequisites)
+### 1. Yêu cầu hệ thống
 - **Python**: Phiên bản `>= 3.10`
 - **Tài khoản SSI FastConnect**: Đăng ký tại [SSI FastConnect Portal](https://fc-data.ssi.com.vn/) để được cấp `ConsumerID`, `ConsumerSecret` và cặp khóa RSA `PrivateKey`.
 
-### 2. Tải mã nguồn về máy (Clone Repository)
+### 2. Tải mã nguồn về máy
 ```bash
 git clone https://github.com/huy01197/vietnam-stock-heatmap.git
 cd "vietnam-stock-heatmap"
@@ -289,7 +289,7 @@ Chỉnh sửa `config.json` với khóa được SSI cấp:
 python3 app.py
 ```
 
-### 6. Nhật Ký Khởi Chạy Thực Tế (Execution Log)
+### 6. Nhật ký khởi chạy thực tế
 ```
 $ python3 app.py
 [System] Rà soát cổng 8050: Sẵn sàng khởi chạy.
@@ -305,7 +305,7 @@ $ python3 app.py
 
 ---
 
-## Đặc Tả Giao Tiếp REST & WebSocket (API Reference)
+## Đặc Tả Giao Tiếp REST & WebSocket
 
 | Phương thức | Đường dẫn (Endpoint) | Mô tả phản hồi |
 | :---: | :--- | :--- |
@@ -318,17 +318,17 @@ $ python3 app.py
 
 ---
 
-## Công Nghệ Sử Dụng (Tech Stack)
+## Công Nghệ & Nền Tảng Kỹ Thuật
 
-- **Backend & Network**: Python 3.10+, `aiohttp`, `asyncio`, `urllib3`, `requests`.
-- **Data Engineering**: `pandas`, SSI FastConnect SDK (`ssi-fc-data`).
-- **Real-time Protocol**: SignalR (SSI MarketHub), WebSocket RFC 6455.
-- **Frontend Visualization**: Apache ECharts 5.4, ZRender Engine, Vanilla JavaScript ES6+.
-- **Typography & Styling**: Google Font `Be Vietnam Pro`, Bauhaus Flat Design, CSS3 Flexbox & Grid.
+- **Lõi máy chủ & Mạng**: Python 3.10+, `aiohttp`, `asyncio`, `urllib3`, `requests`.
+- **Kỹ thuật dữ liệu**: `pandas`, SSI FastConnect SDK (`ssi-fc-data`).
+- **Giao thức thời gian thực**: SignalR (SSI MarketHub), WebSocket RFC 6455.
+- **Trực quan hóa đồ họa**: Apache ECharts 5.4, ZRender Engine, Vanilla JavaScript ES6+.
+- **Kiểu chữ & Bố cục**: Phông chữ Google `Be Vietnam Pro`, Thiết kế phẳng Bauhaus, CSS3 Flexbox & Grid.
 
 ---
 
-## Bản Quyền & Miễn Trừ Trách Nhiệm (License & Disclaimer)
+## Bản Quyền & Miễn Trừ Trách Nhiệm
 
 - **Bản quyền**: Phát hành theo giấy phép [MIT License](LICENSE).
 - **Miễn trừ trách nhiệm**: Dự án được xây dựng phục vụ mục đích nghiên cứu, học tập kỹ thuật lập trình tài chính và trực quan hóa dữ liệu. Người dùng tự chịu trách nhiệm về các quyết định đầu tư dựa trên dữ liệu hiển thị.
